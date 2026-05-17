@@ -1,0 +1,321 @@
+---
+title: Deploy a Next.js portfolio to AWS in 10 minutes with SST v3
+date: 2025-06-28
+summary: From an empty folder to a live Next.js portfolio on AWS with HTTPS, a global CDN, and automatic deployments — no CloudFormation, no console clicking, no drama.
+category: engineering
+tags: [sst, aws, nextjs, typescript, cloudfront, s3, deployment]
+---
+
+> **TL;DR:** Stop wrestling with deployment. We're going from absolutely nothing to a live Next.js
+> portfolio on AWS in 10 minutes. No backend drama, no endless configuration files — just a working
+> website that loads faster than you can brew a cuppa.
+
+## Why this guide exists
+
+Most deployment tutorials read like IKEA instructions written by someone who's never assembled furniture.
+This one's different. We're using **SST v3** — the tool that makes AWS deployment actually enjoyable.
+Think of it as the difference between building a wardrobe with a proper toolkit and trying to build one
+with a butter knife.
+
+What you'll have in 10 minutes:
+
+- ✅ Live Next.js app on AWS
+- ✅ Custom domain with HTTPS
+- ✅ Global CDN — fast everywhere
+- ✅ Automatic deployments
+
+## Step 1 — Prerequisites (2 minutes)
+
+Before we start, you'll need:
+
+```bash
+# Check you've got Node.js (v18+)
+node --version
+
+# Install AWS CLI if you haven't already
+brew install awscli
+
+# Configure AWS (you'll need an AWS account)
+aws configure
+```
+
+When configuring AWS, you'll need:
+
+- Access Key ID and Secret (from AWS IAM)
+- Region: `eu-west-2` (because we're British)
+- Output format: `json`
+
+**macOS/Linux only.** SST v3 doesn't fully support Windows yet, so if you're on Windows either use WSL2
+or wait for full support.
+
+## Step 2 — Create your project (1 minute)
+
+Let's create a new Next.js portfolio from scratch:
+
+```bash
+# Create the project
+npx create-next-app@latest my-portfolio
+
+# Pick TypeScript when prompted; the rest of the prompts can stay on their defaults
+# (hit enter a bunch of times)
+
+# Move in
+cd my-portfolio
+
+# Initialise SST (defaults are fine)
+npx sst@latest init
+```
+
+That's it. SST v3 has created everything you need:
+
+```text
+my-portfolio/
+├── .sst/
+├── .next/
+├── app/                # Your Next.js app
+├── tsconfig.json
+├── sst.config.ts       # Infrastructure config
+└── package.json
+```
+
+Once your infra scales out, it's worth moving the configuration out of `sst.config.ts` and into its own
+folder — or even its own repo.
+
+## Step 3 — Customise your Next.js app (3 minutes)
+
+Make it yours. Here's a tidy, professional portfolio — drop this into `app/page.tsx`:
+
+```tsx
+// app/page.tsx
+export default function Home() {
+  return (
+    <main className="min-h-screen bg-gray-900 text-gray-100 flex flex-col items-center px-4">
+      <header className="w-full max-w-3xl py-12 text-center">
+        <h1 className="text-4xl md:text-5xl font-bold mb-2">John Doe</h1>
+        <p className="text-lg md:text-xl text-gray-400">Full-Stack Developer</p>
+      </header>
+
+      <section className="w-full max-w-3xl py-8 border-t border-gray-800">
+        <h2 className="text-2xl font-semibold mb-4">About me</h2>
+        <p className="text-gray-400 leading-relaxed">
+          I'm a passionate developer focused on building performant and accessible web applications.
+          I enjoy working across the stack, exploring new tech, and crafting elegant solutions to
+          real-world problems.
+        </p>
+      </section>
+
+      <section className="w-full max-w-3xl py-8 border-t border-gray-800">
+        <h2 className="text-2xl font-semibold mb-4">Tech stack</h2>
+        <ul className="grid grid-cols-2 md:grid-cols-3 gap-2 text-gray-300">
+          <li>TypeScript</li>
+          <li>React</li>
+          <li>Next.js</li>
+          <li>Tailwind CSS</li>
+          <li>Node.js</li>
+          <li>PostgreSQL</li>
+        </ul>
+      </section>
+
+      <section className="w-full max-w-3xl py-8 border-t border-gray-800 text-center">
+        <h2 className="text-2xl font-semibold mb-4">Contact</h2>
+        <p className="text-gray-400 mb-2">Feel free to reach out via email:</p>
+        <a href="mailto:john.doe@example.com" className="text-blue-400 hover:underline">
+          john.doe@example.com
+        </a>
+      </section>
+
+      <footer className="w-full max-w-3xl py-8 border-t border-gray-800 text-center text-sm text-gray-600">
+        © {new Date().getFullYear()} John Doe. All rights reserved.
+      </footer>
+    </main>
+  )
+}
+```
+
+## Step 4 — Configure infrastructure (1 minute)
+
+The magic happens in `sst.config.ts`. Here's a minimal configuration that gives you everything:
+
+```ts
+// sst.config.ts
+/// <reference path="./.sst/platform/config.d.ts" />
+
+export default $config({
+  app(input) {
+    return {
+      name: 'my-portfolio',
+      region: 'eu-west-2',
+      removal: input?.stage === 'production' ? 'retain' : 'remove',
+      home: 'aws',
+      providers: {
+        aws: {},
+      },
+    }
+  },
+  async run() {
+    const web = new sst.aws.Nextjs('MyWeb', {
+      cdn: {
+        comment: 'My Portfolio UI',
+        transform: {
+          distribution: {
+            priceClass: 'PriceClass_100', // Cheapest — edge nodes in EU/US regions
+            restrictions: {
+              geoRestriction: {
+                restrictionType: 'whitelist',
+                locations: ['GB', 'US'],
+              },
+            },
+          },
+        },
+      },
+    })
+
+    return {
+      url: web.url,
+    }
+  },
+})
+```
+
+That tiny config file sets up:
+
+- ✅ S3 bucket for hosting
+- ✅ CloudFront CDN for speed
+- ✅ SSL certificate for HTTPS
+- ✅ SPA routing support
+
+## Step 5 — Deploy to AWS (2 minutes)
+
+Here's where the magic happens. Deploy with one command:
+
+```bash
+# From your project root
+npx sst deploy
+```
+
+That's it. SST will:
+
+1. Build your Next.js app
+2. Create the S3 bucket and CloudFront distribution
+3. Upload your files
+4. Set up the SSL certificate
+5. Hand you a live URL
+
+You'll see something like:
+
+```text
+✓ Complete
+   MyWeb: https://d1234567890.cloudfront.net
+```
+
+## Step 6 — Add a custom domain (optional, 1 minute)
+
+Want your own domain? Update `sst.config.ts`:
+
+```ts
+const web = new sst.aws.Nextjs('MyWeb', {
+  transform: {
+    cdn: {
+      comment: 'My Portfolio UI',
+      transform: {
+        distribution: {
+          priceClass: 'PriceClass_100',
+          restrictions: {
+            geoRestriction: {
+              restrictionType: 'whitelist',
+              locations: ['GB', 'US'],
+            },
+          },
+        },
+      },
+    },
+  },
+  domain: {
+    name: 'johndoe-personalwebsite.com',
+    dns: sst.aws.dns({
+      zone: 'my-imported-zoneId', // use this if you also want to manage DNS via Route 53
+    }),
+  },
+})
+```
+
+Then redeploy:
+
+```bash
+npx sst deploy
+```
+
+SST automatically handles the SSL certificate and DNS configuration.
+
+## Local development
+
+Want to develop locally? SST v3 makes this brilliant:
+
+```bash
+# Start the local dev server
+npx sst dev
+```
+
+Your local Next.js app now has access to your AWS resources. It's like having a direct line to
+production, but safe.
+
+## Troubleshooting
+
+**"Command not found: sst"** — make sure you're running `npx sst`, not `sst`.
+
+**"Invalid credentials"** — run `aws configure` again and double-check your access keys.
+
+**"Domain already exists"** — each domain can only be used once per AWS account. Try a different one
+or use the CloudFront URL.
+
+**"Build failed"** — make sure your Next app builds locally first:
+
+```bash
+cd app && npm run build
+```
+
+## What you've built
+
+In 10 minutes you now have:
+
+- ✅ Professional React/Next.js portfolio hosted on AWS
+- ✅ Global CDN — your site loads fast worldwide
+- ✅ HTTPS by default — secure and SEO-friendly
+- ✅ Scalable infrastructure — handles millions of visitors
+- ✅ Simple deployments — just `npx sst deploy`
+
+Your site costs roughly £1–3/month for normal traffic. Cool, cost-effective, and blazing fast.
+
+## Next steps
+
+Now that you've got the basics, consider adding:
+
+- Contact form (using AWS SES)
+- Blog section (markdown files)
+- Analytics (Google Analytics or AWS CloudWatch)
+- CI/CD (GitHub Actions for automatic deployments)
+
+## Final thoughts
+
+SST v3 has made AWS deployment genuinely enjoyable. No more wrestling with CloudFormation templates or
+clicking through the AWS console for hours. Write code, run `sst deploy`, watch it go live.
+
+The best part? Everything scales automatically. Your site can handle 10 visitors or 10 million without
+any changes from you.
+
+Now go build something brilliant. 🚀
+
+**Useful commands**
+
+```bash
+npx sst deploy          # Deploy to AWS
+npx sst remove          # Remove all AWS resources
+npx sst dev             # Start local development
+npx sst console         # Open the SST management console
+```
+
+**Resources**
+
+- [SST v3 documentation](https://sst.dev)
+- [Next.js documentation](https://nextjs.org/docs)
+- [Tailwind CSS](https://tailwindcss.com)

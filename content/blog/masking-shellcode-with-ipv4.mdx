@@ -1,0 +1,108 @@
+---
+title: Masking Shellcode with IPv4
+date: 2025-06-28
+summary: A technique for slipping shellcode past Windows Defender by encoding the bytes as IPv4 address strings — and how to put it back together at runtime.
+category: security
+tags: [security, shellcode, ipv4, obfuscation, windows-defender, evasion, av]
+severity: info
+---
+
+<VulnCallout severity="info" title="Disclaimer">
+This post is intended for educational and research purposes only. The techniques discussed here — including
+masking shellcode with IPv4 encoding — are shared to help cybersecurity professionals understand attack
+vectors and improve defensive measures. I do not condone or support any illegal or malicious activity.
+The information here should not be replicated or used in any unauthorised environment. I'm not responsible
+for any misuse of the content or any consequences arising from its application.
+</VulnCallout>
+
+## What even is IPv4?
+
+IPv4 is the 4th version of Internet Protocol addresses. They are 32-bit integers (numbers) that can be
+expressed in hexadecimal notation. The format of IPv4 addresses looks something like `X.X.X.X` where `X`
+can be a number from 0–255. An example you may frequently come across is your home router's internal
+address — `192.168.0.1`.
+
+These IPs are the backbone of the internet and are used today to route traffic from one place to another.
+Due to their 32-bit nature, however, we can only assign around 4.3 billion devices to one IP address — which
+sounds like a lot, until you remember there are 20 billion+ IoT devices on the planet alone as of 2024.
+
+For this post all you really need to hold in your head is: an IPv4 address is a 32-bit integer formatted as
+`X.X.X.X`.
+
+```text
+192.168.1.1
+```
+
+## What is shellcode?
+
+The word *shellcode* originates from the fact it starts a command shell, giving an attacker control over the
+compromised machine. Shellcode itself is a small piece of executable code that's often used to inject into a
+process, gain control, or execute malicious instructions (or in our case, to open the calculator app).
+This kind of payload is what you'd typically reach for when taking advantage of vulnerabilities like
+buffer overflows.
+
+## Windows Defender
+
+Windows Defender is the built-in antivirus that ships with Windows. Think of it like the bouncer of the OS —
+always watching, scanning, and ready to throw anything shady out. Except this bouncer has a blackout
+blindfold on and noise-cancelling earphones in.
+
+It has some genuinely nice features — signature detection and behavioural analysis to spot basic malware —
+but it can be tricked very easily with the right obfuscation techniques.
+
+## IPv4 obfuscation / deobfuscation
+
+### Obfuscation
+
+The obfuscation technique here involves converting the shellcode's bytes into IPv4 address strings.
+Because IPv4 addresses have 4 octets (a single `X` in `X.X.X.X`), we take 4 bytes of shellcode at a time
+(which in memory are in hex notation), convert each byte to decimal, and stitch them together with dots.
+
+For example, the four hex bytes `48 E4 F0 E8` become the single IP address:
+
+```text
+72.228.240.232
+```
+
+To Defender's scanner those bytes look like a perfectly normal IP-address string in a data section.
+There's no executable signature to match against and nothing behaviourally suspicious until the moment we
+reassemble them.
+
+### Deobfuscation
+
+Once the obfuscated payload has slipped past detection and made it into memory, we need to put the bytes
+back the way they were before we execute, otherwise we get a crash or undefined behaviour.
+
+The reassembly is the mirror of the encode: split each "address" on the dots, parse each octet back into a
+byte, and write them sequentially into an allocated RWX page. Once the page is whole, jump to it.
+
+```text
+"72.228.240.232"  →  split on '.'  →  [72, 228, 240, 232]  →  bytes 0x48 0xE4 0xF0 0xE8
+```
+
+That's it — same payload, presented to the scanner as something that looks indistinguishable from a
+benign IP list.
+
+## Before vs after obfuscation
+
+**Before.** Defender catches us trying to allocate and execute the raw shellcode straight from a buffer.
+The byte pattern matches a known signature and the call to mark the page executable trips the behavioural
+heuristic. The payload never gets to run.
+
+**After.** With the IPv4 encoding in place, the static buffer reads as a list of dotted-quad strings — nothing
+flagged on disk, nothing flagged on load. We allocate a page, decode the strings byte-by-byte into it, mark
+it executable, and jump. `calc.exe` opens. Cool Mr Hacker Man status achieved.
+
+## Why this works (and why it won't forever)
+
+This technique works because Defender's static-signature engine is, fundamentally, pattern matching. Anything
+that mutates the byte layout — without changing what the bytes mean once decoded — buys you time. IPv4
+encoding is just one of dozens of equivalent encodings (UUIDs, MAC addresses, GUIDs, hex strings) that
+people have used to the same effect.
+
+It also won't work forever. The moment the decoder loop becomes the signature, the same scanners flag the
+decoder instead of the payload. The arms race continues. The lesson, for defenders, is to weight
+behavioural detection (RWX allocation + indirect call from a fresh page) much more heavily than static
+signatures alone — because the static side is, structurally, always one encoding away from being defeated.
+
+That's the whole trick. More posts as I work through the next encoding family.

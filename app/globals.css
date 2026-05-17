@@ -1,0 +1,220 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    /* RGB triplets — consumed via `rgb(var(--token) / <alpha-value>)` */
+    /* Neutral charcoal base — Apple-ish, lets glass surfaces feel transparent */
+    --bg-base: 8 9 12;             /* #08090c */
+    --bg-elevated: 14 16 21;       /* #0e1015 */
+
+    /* Single subtle accent — iridescent ice. Used sparingly. */
+    --accent: 199 228 255;         /* #c7e4ff icy white-blue */
+    --accent-foreground: 8 9 12;
+
+    /* Reserved color stops for iridescent gradients (used on glass rims, not as fills) */
+    --iri-1: 255 255 255;
+    --iri-2: 199 228 255;          /* ice */
+    --iri-3: 244 200 220;          /* faint rose */
+    --iri-4: 209 250 229;          /* faint mint */
+
+    /* Text */
+    --foreground: 245 245 247;     /* Apple's signature off-white */
+    --muted: 24 27 33;
+    --muted-foreground: 161 161 170;
+    --border: 38 41 49;
+  }
+
+  * {
+    @apply border-border;
+  }
+
+  html {
+    scroll-behavior: smooth;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+
+  body {
+    @apply bg-base text-foreground font-sans;
+    background-image:
+      /* very faint radial vignette warming the center */
+      radial-gradient(120% 80% at 50% 0%, rgba(255, 255, 255, 0.04), transparent 60%),
+      radial-gradient(80% 60% at 50% 100%, rgba(255, 255, 255, 0.02), transparent 60%);
+    background-attachment: fixed;
+    min-height: 100dvh;
+  }
+
+  ::selection {
+    background-color: rgb(var(--accent) / 0.35);
+    color: rgb(var(--foreground));
+  }
+
+  :focus-visible {
+    outline: 2px solid rgb(var(--accent));
+    outline-offset: 3px;
+    border-radius: 4px;
+  }
+}
+
+@layer components {
+  /**
+   * Liquid Glass — the core surface primitive.
+   * Heavy transparency, big blur, subtle inner specular highlight on the top edge,
+   * and an iridescent gradient rim on hover (handled by .glass-hover).
+   */
+  .glass {
+    position: relative;
+    background: rgb(255 255 255 / 0.035);
+    backdrop-filter: blur(32px) saturate(180%) brightness(1.04);
+    -webkit-backdrop-filter: blur(32px) saturate(180%) brightness(1.04);
+    border: 1px solid rgb(255 255 255 / 0.06);
+    box-shadow:
+      inset 0 1px 0 rgb(255 255 255 / 0.10),
+      inset 0 -1px 0 rgb(0 0 0 / 0.25),
+      0 24px 64px -32px rgb(0 0 0 / 0.5);
+  }
+
+  /* Iridescent rim — only visible on hover, painted via mask trick on ::after */
+  .glass::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    padding: 1px;
+    background: linear-gradient(
+      135deg,
+      rgb(var(--iri-1) / 0.6) 0%,
+      rgb(var(--iri-2) / 0.35) 30%,
+      rgb(var(--iri-3) / 0.2) 55%,
+      rgb(var(--iri-4) / 0.25) 80%,
+      rgb(var(--iri-1) / 0.1) 100%
+    );
+    -webkit-mask:
+      linear-gradient(#000 0 0) content-box,
+      linear-gradient(#000 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 400ms ease;
+  }
+
+  .glass-hover {
+    @apply transition-all duration-500;
+    transition-property: transform, box-shadow, background-color, border-color;
+  }
+  .glass-hover:hover {
+    background: rgb(255 255 255 / 0.06);
+    border-color: rgb(255 255 255 / 0.10);
+    box-shadow:
+      inset 0 1px 0 rgb(255 255 255 / 0.14),
+      inset 0 -1px 0 rgb(0 0 0 / 0.3),
+      0 30px 80px -20px rgb(0 0 0 / 0.55);
+  }
+  .glass-hover:hover::after {
+    opacity: 0.7;
+  }
+
+  /* Frostier variant for sticky nav background */
+  .glass-bar {
+    background: rgb(8 9 12 / 0.55);
+    backdrop-filter: blur(24px) saturate(160%);
+    -webkit-backdrop-filter: blur(24px) saturate(160%);
+    border-bottom: 1px solid rgb(255 255 255 / 0.06);
+  }
+
+  /* Soft monochrome gradient text (no purple/green pop) */
+  .gradient-text {
+    background: linear-gradient(
+      180deg,
+      rgb(var(--foreground)) 0%,
+      rgb(var(--foreground) / 0.6) 100%
+    );
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    color: transparent;
+  }
+
+  /* Iridescent text — used very sparingly for one keyword or accent */
+  .iri-text {
+    background: linear-gradient(
+      90deg,
+      rgb(var(--iri-2)),
+      rgb(var(--iri-3)),
+      rgb(var(--iri-4)),
+      rgb(var(--iri-2))
+    );
+    background-size: 200% 100%;
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    color: transparent;
+    animation: iri-shift 8s linear infinite;
+  }
+
+  .terminal-cursor::after {
+    content: '▍';
+    display: inline-block;
+    margin-left: 2px;
+    color: rgb(var(--accent));
+    animation: cursor-blink 1s step-end infinite;
+  }
+
+  /* shiki code blocks */
+  pre {
+    @apply overflow-x-auto rounded-xl border border-border bg-black/40 p-4 text-sm;
+  }
+  pre [data-line] {
+    @apply px-4 border-l-2 border-transparent;
+  }
+  pre [data-highlighted-line] {
+    @apply border-accent bg-accent/10;
+  }
+  [data-rehype-pretty-code-title] {
+    @apply rounded-t-xl border border-b-0 border-border bg-black/60 px-4 py-2 font-mono text-xs text-muted-foreground;
+  }
+  [data-rehype-pretty-code-title] + pre {
+    @apply rounded-t-none;
+  }
+  code[data-line-numbers] {
+    counter-reset: line;
+  }
+  code[data-line-numbers] > [data-line]::before {
+    counter-increment: line;
+    content: counter(line);
+    /* WCAG AA: muted-foreground @ 100% = ~9:1 on base. Was /60 (~3.3:1) — failed. */
+    @apply mr-4 inline-block w-4 text-right text-muted-foreground;
+  }
+}
+
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+  .pretty-wrap {
+    text-wrap: pretty;
+  }
+  .preserve-3d {
+    transform-style: preserve-3d;
+  }
+}
+
+@keyframes iri-shift {
+  to {
+    background-position: -200% 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+}

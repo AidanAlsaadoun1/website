@@ -3,13 +3,20 @@
 import { motion, useReducedMotion, type Variants } from 'framer-motion'
 import type { ReactNode } from 'react'
 
+/**
+ * Gentle fade-up reveal when the element scrolls into view.
+ *
+ * Deliberately NO blur filter and NO negative viewport margin: blur left the
+ * page looking out of focus while hydration/entrance was in flight, and the
+ * -80px margin meant sections near the fold never un-hid until a deep scroll.
+ * Any visible pixel now triggers the (quick) animation, once.
+ */
 const baseVariants: Variants = {
-  hidden: { opacity: 0, y: 24, filter: 'blur(8px)' },
+  hidden: { opacity: 0, y: 14 },
   show: {
     opacity: 1,
     y: 0,
-    filter: 'blur(0px)',
-    transition: { duration: 0.7, ease: [0.22, 1, 0.36, 1] },
+    transition: { duration: 0.45, ease: [0.22, 1, 0.36, 1] },
   },
 }
 
@@ -18,10 +25,6 @@ const reducedVariants: Variants = {
   show: { opacity: 1, transition: { duration: 0.001 } },
 }
 
-/**
- * Fade-up + slight blur reveal triggered when the element scrolls into view.
- * Single-shot (doesn't re-trigger on scroll-out/in).
- */
 export function Reveal({
   children,
   delay = 0,
@@ -41,7 +44,7 @@ export function Reveal({
       className={className}
       initial="hidden"
       whileInView="show"
-      viewport={{ once: true, margin: '-80px' }}
+      viewport={{ once: true }}
       variants={variants}
       transition={{ delay }}
     >
@@ -51,13 +54,13 @@ export function Reveal({
 }
 
 /**
- * Stagger container, wrap a parent in this, give each child <Reveal>,
+ * Stagger container: wrap a parent in this, give each child <Reveal>,
  * and they cascade in.
  */
 export function RevealGroup({
   children,
   className,
-  stagger = 0.08,
+  stagger = 0.07,
   as = 'div',
 }: {
   children: ReactNode
@@ -72,7 +75,7 @@ export function RevealGroup({
       className={className}
       initial="hidden"
       whileInView="show"
-      viewport={{ once: true, margin: '-80px' }}
+      viewport={{ once: true }}
       variants={{
         hidden: {},
         show: {

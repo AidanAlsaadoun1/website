@@ -159,10 +159,6 @@ function CertBadge({ cert }: { cert: Certification }) {
   if (cert.badgeUrl) {
     return (
       <div className="relative flex h-28 items-center justify-center">
-        <div
-          className="absolute inset-0 -z-10 rounded-2xl bg-foreground/[0.03] blur-xl"
-          aria-hidden="true"
-        />
         <Image
           src={cert.badgeUrl}
           alt=""

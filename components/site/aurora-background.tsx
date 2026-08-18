@@ -1,22 +1,26 @@
 /**
- * Page backdrop, cream paper with a few very soft pastel washes and a faint
- * dotted texture, like good notebook paper. Pure CSS, zero JS.
+ * Page backdrop: cream paper with soft pastel washes and a faint dotted
+ * texture, like good notebook paper.
+ *
+ * Deliberately NO filter: blur() here. The washes are plain radial gradients
+ * that fade out on their own; CSS blur filters on huge elements are a known
+ * memory/crash hazard on iOS Safari. Pure CSS, zero JS, zero filters.
  */
 export function AuroraBackground() {
   return (
     <div aria-hidden="true" className="pointer-events-none fixed inset-0 -z-10 overflow-hidden">
-      {/* Soft pastel washes */}
+      {/* Soft pastel washes (plain gradients, no filters) */}
       <div
-        className="absolute -left-[15%] -top-[10%] h-[55vh] w-[55vw] rounded-full opacity-60 blur-[110px]"
-        style={{ background: 'radial-gradient(circle, rgba(255,233,163,0.55), transparent 65%)' }}
+        className="absolute -left-[20%] -top-[15%] h-[65vh] w-[70vw] rounded-full opacity-70"
+        style={{ background: 'radial-gradient(closest-side, rgba(255,233,163,0.5), transparent)' }}
       />
       <div
-        className="absolute -right-[12%] top-[25%] h-[50vh] w-[45vw] rounded-full opacity-50 blur-[110px]"
-        style={{ background: 'radial-gradient(circle, rgba(214,228,255,0.5), transparent 65%)' }}
+        className="absolute -right-[18%] top-[20%] h-[60vh] w-[60vw] rounded-full opacity-60"
+        style={{ background: 'radial-gradient(closest-side, rgba(214,228,255,0.45), transparent)' }}
       />
       <div
-        className="absolute bottom-[-15%] left-[25%] h-[50vh] w-[50vw] rounded-full opacity-40 blur-[120px]"
-        style={{ background: 'radial-gradient(circle, rgba(255,217,232,0.45), transparent 65%)' }}
+        className="absolute bottom-[-20%] left-[20%] h-[60vh] w-[65vw] rounded-full opacity-50"
+        style={{ background: 'radial-gradient(closest-side, rgba(255,217,232,0.4), transparent)' }}
       />
 
       {/* Faint dot grid, fading toward the bottom */}

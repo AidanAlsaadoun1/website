@@ -56,9 +56,6 @@ export function PixelAvatar({ size = 192, className, animate = true }: Props) {
         className={animate ? 'animate-bob' : undefined}
         role="img"
         aria-label="Pixel-art avatar: brown hair, glasses, cobalt hoodie"
-        style={{
-          filter: 'drop-shadow(0 10px 20px rgba(28,26,23,0.25))',
-        }}
       >
         {PIXELS.map((row, y) =>
           row.map((c, x) =>

@@ -127,7 +127,7 @@ export function Hero() {
               aria-hidden="true"
               className="absolute -top-3 right-8 h-6 w-16 rotate-6 rounded-sm bg-pop-sky/90 shadow-sm"
             />
-            <PixelAvatar size={210} />
+            <PixelAvatar size={210} animate={false} />
             <p className="mt-4 text-center font-mono text-xs text-muted-foreground">
               me, in 16×16 pixels
             </p>

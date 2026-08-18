@@ -1,13 +1,13 @@
 /**
  * Single source of truth for everything personal on the site.
- * Edit this file (and the MDX content under /content) — that's it.
+ * Edit this file (and the MDX content under /content), that's it.
  */
 
 export type Certification = {
   name: string
   issuer: string
   issuedAt: string // ISO date (day precision; only month + year is rendered)
-  expiresAt?: string // ISO date — optional
+  expiresAt?: string // ISO date, optional
   credentialUrl?: string
   credentialId?: string
   badgeUrl?: string
@@ -24,41 +24,108 @@ export type Talk = {
   type: 'conference' | 'podcast' | 'meetup' | 'workshop'
 }
 
-export type CurrentlyExploring = {
+export type CurrentlyBuilding = {
   title: string
   description: string
   link?: string
+}
+
+/** A "what I actually do" card on the home page. */
+export type Capability = {
+  title: string
+  summary: string
+  bullets: string[]
+}
+
+/** One row of the stack table. */
+export type StackGroup = {
+  label: string
+  items: string[]
+}
+
+/** Key/value pairs shown in the hero side panel. */
+export type Fact = {
+  label: string
+  value: string
 }
 
 export const siteConfig = {
   name: 'Aidan',
   fullName: 'Aidan Alsaadoun',
   role: 'Founding Engineer',
+  discipline: 'Full-stack engineer',
   // intentionally lowercase, per Aidan
   company: {
     name: 'sprintworks',
     url: '', // TODO: drop in the sprintworks URL if you want it linked
   },
   location: 'United Kingdom',
+  availability: 'Open to interesting problems',
 
   /**
-   * Short blurb under the hero. Keep it punchy — one or two sentences.
-   * The whole site reads in "warm & nerdy" voice; calibrate accordingly.
+   * Short blurb under the hero. Keep it punchy, one or two sentences.
    */
   blurb:
-    "Full-stack engineer with a soft spot for packet captures and breaking things on purpose. Currently building from zero at sprintworks.",
+    'The screen you see, the API behind it, the infra underneath. Right now: building sprintworks from zero.',
 
   /**
-   * Longer about-page paragraph. Drop your own words in here when you're ready —
-   * I'd rather you wrote it than I invented it.
+   * Longer about-page paragraph. Drop your own words in here when you're ready.
    */
   longBio:
-    "I'm a full-stack engineer working as a Founding Engineer at sprintworks. Day to day that means shipping product across the stack, but the corner of my brain that doesn't sleep is the one obsessed with how systems break — vulnerability analysis, threat modelling, the occasional CTF. This site is where I write that down, link the work I'm proud of, and keep a tidy list of certifications so I don't lose them in a drawer.",
+    "I'm the founding engineer at sprintworks, which means I own features the whole way down: React at the top, TypeScript in the middle, AWS underneath. I like types that make bad states impossible and deploys boring enough for a Friday. And the security habit from my pentesting days never left: I threat-model in the design review, not after the incident.",
+
+  /** One-line answer to "so what do you actually do?", used on the home page. */
+  positioning:
+    'Product-minded engineering across the whole stack, from the first component to the production alarm.',
 
   socials: {
     github: 'AidanAlsaadoun1',
     linkedin: 'https://www.linkedin.com/in/aidan-a-80a037255/',
   },
+
+  /**
+   * Hero side panel. Short, factual, scannable, the things a hiring manager
+   * or founder wants in the first five seconds.
+   */
+  facts: [
+    { label: 'Role', value: 'Founding Engineer, sprintworks' },
+    { label: 'Focus', value: 'Full-stack product engineering' },
+    { label: 'Core stack', value: 'TypeScript · React · Node · AWS' },
+    { label: 'Based in', value: 'United Kingdom' },
+  ] satisfies Fact[] as Fact[],
+
+  /**
+   * "What I do", three cards on the home page.
+   * TODO: trim anything here you wouldn't want to be quizzed on.
+   */
+  capabilities: [
+    {
+      title: 'Product & interface',
+      summary: 'The part people touch. Fast, accessible, fun to use.',
+      bullets: ['React & Next.js', 'Design systems & Storybook', 'Accessibility & Web Vitals'],
+    },
+    {
+      title: 'APIs & data',
+      summary: 'Typed contracts and schemas that stay sane as things grow.',
+      bullets: ['TypeScript, Java & Go', 'GraphQL & REST', 'PostgreSQL & DynamoDB'],
+    },
+    {
+      title: 'Cloud & delivery',
+      summary: 'Ship it, then keep it boring. Alarms before users notice.',
+      bullets: ['AWS (2× certified)', 'SST v3 & infra as code', 'CI/CD & observability'],
+    },
+  ] satisfies Capability[] as Capability[],
+
+  /**
+   * The stack table. Keep it honest, these are the things you'd be happy
+   * to be handed a ticket in tomorrow morning.
+   */
+  stack: [
+    { label: 'Languages', items: ['TypeScript', 'JavaScript', 'Java', 'Go', 'Python', 'SQL', 'Bash'] },
+    { label: 'Front end', items: ['React', 'Next.js', 'Tailwind CSS', 'Framer Motion', 'Storybook'] },
+    { label: 'Back end', items: ['Node.js', 'GraphQL / AppSync', 'REST', 'Drizzle ORM', 'PostgreSQL', 'DynamoDB'] },
+    { label: 'Cloud & tooling', items: ['AWS', 'SST v3', 'Vercel', 'Docker', 'GitHub Actions', 'Vitest'] },
+  ] satisfies StackGroup[] as StackGroup[],
 
   certifications: [
     {
@@ -72,7 +139,7 @@ export const siteConfig = {
       credentialUrl: 'https://mentorcruise.com/',
     },
     {
-      name: 'AWS Certified Solutions Architect — Associate',
+      name: 'AWS Certified Solutions Architect - Associate',
       issuer: 'Amazon Web Services',
       issuedAt: '2025-05-01',
       credentialId: '3c4f95f1c5b540b7a29f87db5f7506b2',
@@ -80,7 +147,7 @@ export const siteConfig = {
         'https://cp.certmetrics.com/amazon/en/public/verify/credential/3c4f95f1c5b540b7a29f87db5f7506b2',
     },
     {
-      name: 'AWS Certified Developer — Associate',
+      name: 'AWS Certified Developer - Associate',
       issuer: 'Amazon Web Services',
       issuedAt: '2025-05-01',
       expiresAt: '2028-05-01',
@@ -89,7 +156,7 @@ export const siteConfig = {
         'https://cp.certmetrics.com/amazon/en/public/verify/credential/75861d305dfa46ffa1edd03d52e72011',
     },
     {
-      name: 'PJPT — Practical Junior Penetration Tester',
+      name: 'PJPT: Practical Junior Penetration Tester',
       issuer: 'TCM Security',
       issuedAt: '2024-10-01',
       credentialId: '118350064',
@@ -111,23 +178,27 @@ export const siteConfig = {
   ] satisfies Talk[] as Talk[],
 
   /**
-   * "Currently exploring" — shown on the home/about and the security index page.
-   * Keeps the security section feeling alive while you don't yet have published CVEs.
+   * "Currently building", shown on the home page. Keep it present-tense and
+   * concrete; this is the section people read to see whether you're active.
    */
-  currentlyExploring: [
+  currentlyBuilding: [
     {
-      title: 'Web app pentesting workflows',
-      description: 'Working through PortSwigger Academy and Burp Suite Pro on practice targets.',
+      title: 'sprintworks, from zero',
+      description: 'First services, product architecture, delivery habits.',
     },
     {
-      title: 'Binary exploitation fundamentals',
-      description: 'PicoCTF / pwn.college tracks, building intuition for memory corruption bugs.',
+      title: 'Type-safe data access',
+      description: 'Drizzle helpers so schema and queries stop drifting.',
     },
     {
-      title: 'Threat modelling at sprintworks',
-      description: 'Pushing STRIDE into our design reviews so security is upstream of the PR.',
+      title: 'A design system that survives contact',
+      description: 'Storybook, visual review, a11y tests in CI.',
     },
-  ] satisfies CurrentlyExploring[] as CurrentlyExploring[],
+    {
+      title: 'Threat modelling upstream',
+      description: 'STRIDE in the design review, before the PR.',
+    },
+  ] satisfies CurrentlyBuilding[] as CurrentlyBuilding[],
 
   /**
    * Optional curated case-study slugs. Items here override the GitHub-pinned card.
@@ -144,18 +215,22 @@ export const siteConfig = {
   ],
 
   seo: {
-    title: 'Aidan — Founding Engineer & Vulnerability Research Curious',
+    title: 'Aidan Alsaadoun · Full-Stack Engineer',
     description:
-      'Personal site of Aidan: full-stack engineering, vulnerability research, and writing about both.',
+      'Full-stack engineer and Founding Engineer at sprintworks. I build products end to end with TypeScript, React, Node and AWS, and write about it.',
     keywords: [
-      'Aidan',
+      'Aidan Alsaadoun',
+      'full-stack engineer',
       'Founding Engineer',
       'sprintworks',
-      'full-stack engineer',
-      'vulnerability research',
-      'cyber security',
-      'Next.js',
       'TypeScript',
+      'React',
+      'Next.js',
+      'Node.js',
+      'Java',
+      'Go',
+      'AWS',
+      'software engineer UK',
     ],
   },
 } as const

@@ -5,10 +5,12 @@ export default function NotFound() {
   return (
     <section className="container flex min-h-[70vh] flex-col items-center justify-center text-center">
       <GlassCard className="max-w-xl px-10 py-12">
-        <p className="font-mono text-sm text-accent">404 // route_not_found</p>
-        <h1 className="mt-3 text-5xl font-bold tracking-tight">Page went 404.</h1>
-        <p className="mt-4 text-muted-foreground">
-          Either it never existed or it was patched out. Either way, this URL doesn&apos;t resolve.
+        <p aria-hidden="true">
+          <span className="tag-sticker bg-pop-blush">Error 404</span>
+        </p>
+        <h1 className="display mt-6 text-display-sm">This page ghosted us.</h1>
+        <p className="pretty-wrap mt-4 leading-relaxed text-muted-foreground">
+          Either it never existed or it moved without leaving a note. Rude.
         </p>
         <div className="mt-6 inline-block">
           <PillLink href="/" variant="solid">

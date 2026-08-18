@@ -11,7 +11,7 @@ export type PostKind = 'blog' | 'security' | 'projects'
  * - security:    pentesting, CTF writeups, vuln research
  * - info:        meta posts, opinion, "what I'm up to" updates
  *
- * Tags can still be anything — they're just SEO/visual metadata. Categories
+ * Tags can still be anything, they're just SEO/visual metadata. Categories
  * drive the filter chips on /blog.
  */
 export const POST_CATEGORIES = ['engineering', 'security', 'info'] as const

@@ -97,17 +97,20 @@ export async function getPinnedRepos(): Promise<GhRepo[]> {
     const nodes = json.data?.user?.pinnedItems?.nodes ?? []
     if (nodes.length === 0) return getFallbackRepos()
 
-    return nodes.map((n) => ({
-      name: n.name,
-      description: n.description,
-      url: n.url,
-      homepageUrl: n.homepageUrl,
-      stars: n.stargazerCount,
-      forks: n.forkCount,
-      language: n.primaryLanguage,
-      updatedAt: n.updatedAt,
-      topics: n.repositoryTopics.nodes.map((t) => t.topic.name),
-    }))
+    return nodes
+      .map((n) => ({
+        name: n.name,
+        description: n.description,
+        url: n.url,
+        homepageUrl: n.homepageUrl,
+        stars: n.stargazerCount,
+        forks: n.forkCount,
+        language: n.primaryLanguage,
+        updatedAt: n.updatedAt,
+        topics: n.repositoryTopics.nodes.map((t) => t.topic.name),
+      }))
+      // Most-starred first (GitHub returns pinned order otherwise)
+      .sort((a, b) => b.stars - a.stars)
   } catch (err) {
     console.warn('[github] fetch failed', err)
     return getFallbackRepos()

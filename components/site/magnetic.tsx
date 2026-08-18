@@ -4,7 +4,7 @@ import { motion, useMotionValue, useSpring, useReducedMotion } from 'framer-moti
 import { useRef, type ReactNode } from 'react'
 
 /**
- * "Magnetic" button wrapper — the child leans subtly toward the cursor while hovered.
+ * "Magnetic" button wrapper, the child leans subtly toward the cursor while hovered.
  * Range of motion is small (max ~10px). Disabled under reduced motion.
  */
 export function Magnetic({
@@ -13,7 +13,7 @@ export function Magnetic({
   className,
 }: {
   children: ReactNode
-  /** 0..1 — how strongly the element follows the cursor */
+  /** 0..1, how strongly the element follows the cursor */
   strength?: number
   className?: string
 }) {

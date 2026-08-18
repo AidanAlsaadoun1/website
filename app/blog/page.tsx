@@ -14,7 +14,7 @@ import {
 export const metadata: Metadata = {
   title: 'Blog',
   description:
-    'Notes on engineering, security, and whatever else I felt strongly about — all in one feed.',
+    'Notes on building software end to end: architecture, delivery, the occasional security writeup.',
 }
 
 type SearchParams = Promise<{ category?: string }>
@@ -28,7 +28,7 @@ export default async function BlogIndex({ searchParams }: { searchParams: Search
   const active = isCategory(category) ? category : undefined
   const posts = await getAllPosts('blog')
 
-  // Fixed three-category filter — no per-tag chip soup.
+  // Fixed three-category filter, no per-tag chip soup.
   const counts: Record<PostCategory, number> = {
     engineering: 0,
     security: 0,
@@ -59,9 +59,9 @@ export default async function BlogIndex({ searchParams }: { searchParams: Search
       />
       <SectionHeading
         level={1}
-        eyebrow="blog"
-        title="Notes from the field"
-        description="Engineering, security writeups, and the occasional rant. Updated whenever I have something worth saying."
+        eyebrow="Writing"
+        title="Notes from the build"
+        description="What I learned shipping things end to end: architecture calls, delivery habits, and the occasional security writeup. Updated whenever I have something worth saying."
       />
 
       {posts.length > 0 && (

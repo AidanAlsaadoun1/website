@@ -1,5 +1,5 @@
 /**
- * 8-bit pixel avatar — drawn inline as SVG so it scales sharp.
+ * 8-bit pixel avatar, drawn inline as SVG so it scales sharp.
  * Neutral palette: charcoal hoodie, ice-blue hair pop, no clashing colors.
  *
  * Swap with your own art later: same 16x16 grid, or replace with <Image />.
@@ -33,13 +33,13 @@ const PIXELS: number[][] = [
 ]
 
 const PALETTE: Record<number, string> = {
-  1: 'rgb(199 228 255)', // hair — ice (matches accent)
+  1: 'rgb(74 52 36)',    // hair, warm brown
   2: 'rgb(245 215 184)', // skin
-  3: 'rgb(58 62 74)',    // hoodie — neutral charcoal
-  4: 'rgb(42 46 56)',    // hoodie shadow
-  5: 'rgb(20 20 26)',    // glasses
-  6: 'rgb(199 228 255)', // eye glow — same icy accent
-  7: 'rgb(8 9 12)',      // outline matches bg
+  3: 'rgb(47 92 245)',   // hoodie, cobalt pop
+  4: 'rgb(35 68 190)',   // hoodie shadow
+  5: 'rgb(28 26 23)',    // glasses, ink
+  6: 'rgb(255 255 255)', // glasses glint
+  7: 'rgb(28 26 23)',    // outline, ink
 }
 
 export function PixelAvatar({ size = 192, className, animate = true }: Props) {
@@ -55,9 +55,9 @@ export function PixelAvatar({ size = 192, className, animate = true }: Props) {
         shapeRendering="crispEdges"
         className={animate ? 'animate-bob' : undefined}
         role="img"
-        aria-label="Pixel-art avatar: ice-blue hair, glasses, charcoal hoodie"
+        aria-label="Pixel-art avatar: brown hair, glasses, cobalt hoodie"
         style={{
-          filter: 'drop-shadow(0 12px 28px rgba(0,0,0,0.5))',
+          filter: 'drop-shadow(0 10px 20px rgba(28,26,23,0.25))',
         }}
       >
         {PIXELS.map((row, y) =>

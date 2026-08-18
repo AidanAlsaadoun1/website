@@ -35,7 +35,7 @@ export function Breadcrumbs({ items, className }: Props) {
         {showBack && backTarget?.href && (
           <Link
             href={backTarget.href}
-            className="glass glass-hover inline-flex items-center gap-1.5 rounded-full border-white/10 px-3 py-1.5 text-xs text-muted-foreground hover:text-foreground"
+            className="glass glass-hover inline-flex items-center gap-1.5 rounded-full px-3 py-1.5 text-xs text-muted-foreground hover:text-foreground"
           >
             <ChevronLeft className="h-3.5 w-3.5" aria-hidden="true" />
             <span className="font-mono">

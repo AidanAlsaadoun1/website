@@ -5,7 +5,7 @@ import { redirect } from 'next/navigation'
  * next.config.mjs `redirects()` (permanent 308). This route is a belt-and-braces
  * fallback for the unlikely case the config redirect doesn't apply.
  *
- * Safe to `rm -rf app/security` locally — keeping the file only because the dev
+ * Safe to `rm -rf app/security` locally, keeping the file only because the dev
  * environment couldn't delete it.
  */
 export default function Page() {

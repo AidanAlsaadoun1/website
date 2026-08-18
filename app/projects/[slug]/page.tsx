@@ -44,13 +44,10 @@ export default async function ProjectPage({
       />
 
       <header className="mb-10">
-        <p
-          className="font-mono text-xs uppercase tracking-[0.2em] text-muted-foreground"
-          aria-hidden="true"
-        >
-          // case_study
+        <p aria-hidden="true">
+          <span className="tag-sticker bg-pop-mint">Case study</span>
         </p>
-        <h1 className="mt-2 text-balance text-4xl font-bold tracking-tight sm:text-5xl">
+        <h1 className="display mt-3 text-balance text-display-sm sm:text-display-md">
           {post.frontmatter.title}
         </h1>
         <p className="pretty-wrap mt-3 text-lg text-muted-foreground">
@@ -88,7 +85,7 @@ export default async function ProjectPage({
             {post.frontmatter.stack.map((s) => (
               <span
                 key={s}
-                className="rounded-full border border-white/10 bg-white/5 px-2 py-0.5 font-mono text-[10px] uppercase tracking-wider text-muted-foreground"
+                className="rounded-full border border-foreground/15 px-2 py-0.5 font-mono text-[10px] uppercase tracking-wider text-muted-foreground"
               >
                 {s}
               </span>
@@ -97,7 +94,7 @@ export default async function ProjectPage({
         )}
       </header>
 
-      <div className="prose prose-invert max-w-none">
+      <div className="prose max-w-none">
         <Markdown source={post.content} />
       </div>
     </article>

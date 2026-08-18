@@ -51,7 +51,7 @@ export function Reveal({
 }
 
 /**
- * Stagger container — wrap a parent in this, give each child <Reveal>,
+ * Stagger container, wrap a parent in this, give each child <Reveal>,
  * and they cascade in.
  */
 export function RevealGroup({

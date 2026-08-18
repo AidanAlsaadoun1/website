@@ -11,7 +11,7 @@ import {
 import { useRef, type ReactNode } from 'react'
 
 /**
- * 3D mouse-tracked tilt wrapper. Light, ~6° max tilt — Apple-style "soft" parallax,
+ * 3D mouse-tracked tilt wrapper. Light, ~6° max tilt, Apple-style "soft" parallax,
  * not the dramatic glass-card-trick we've all seen. Adds a moving specular highlight
  * (the `<div>` after children) that follows the pointer.
  *

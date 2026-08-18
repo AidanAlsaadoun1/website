@@ -51,7 +51,7 @@ class IntersectionObserverMock {
 ;(globalThis as unknown as { IntersectionObserver: typeof IntersectionObserver }).IntersectionObserver =
   IntersectionObserverMock as unknown as typeof IntersectionObserver
 
-// matchMedia — default to "prefers-reduced-motion: reduce" so motion is disabled
+// matchMedia, default to "prefers-reduced-motion: reduce" so motion is disabled
 // in unit tests. Individual tests can override via vi.stubGlobal.
 Object.defineProperty(window, 'matchMedia', {
   writable: true,

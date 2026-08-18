@@ -1,107 +1,83 @@
 'use client'
 
-import { motion, useReducedMotion, type Variants } from 'framer-motion'
+import { motion, useReducedMotion } from 'framer-motion'
 import { ArrowRight, Github, Linkedin } from 'lucide-react'
 import { siteConfig } from '@/config/site'
 import { Magnetic } from './magnetic'
-import { PillLink } from '@/components/ui/pill-button'
 import { PixelAvatar } from './pixel-avatar'
-import { TerminalPrompt } from './terminal-prompt'
+import { PillLink } from '@/components/ui/pill-button'
 
 const easeOut = [0.22, 1, 0.36, 1] as const
 
-const wordContainer: Variants = {
-  hidden: {},
-  show: {
-    transition: { staggerChildren: 0.06, delayChildren: 0.05 },
-  },
-}
-const wordItem: Variants = {
-  hidden: { opacity: 0, y: '0.4em', filter: 'blur(8px)' },
-  show: {
-    opacity: 1,
-    y: 0,
-    filter: 'blur(0px)',
-    transition: { duration: 0.6, ease: easeOut },
-  },
-}
-
-const reducedWords: Variants = {
-  hidden: { opacity: 0 },
-  show: { opacity: 1, transition: { staggerChildren: 0 } },
-}
-
-function Words({ text, className }: { text: string; className?: string }) {
+/** Hand-drawn squiggle that draws itself under the accent phrase. */
+function Squiggle() {
   const prefersReduced = useReducedMotion()
-  const parts = text.split(' ')
   return (
-    <motion.span
-      className={className}
-      variants={prefersReduced ? reducedWords : wordContainer}
-      initial="hidden"
-      animate="show"
+    <svg
+      aria-hidden="true"
+      viewBox="0 0 220 14"
+      preserveAspectRatio="none"
+      className="absolute -bottom-2 left-0 h-3 w-full"
     >
-      {parts.map((word, i) => (
-        <motion.span
-          key={`${word}-${i}`}
-          variants={prefersReduced ? reducedWords : wordItem}
-          className="inline-block whitespace-pre"
-        >
-          {word}
-          {i < parts.length - 1 ? ' ' : ''}
-        </motion.span>
-      ))}
-    </motion.span>
+      <motion.path
+        d="M3 9 Q 20 2, 38 8 T 74 8 T 110 8 T 146 8 T 182 8 T 217 7"
+        fill="none"
+        stroke="rgb(var(--accent))"
+        strokeWidth="5"
+        strokeLinecap="round"
+        initial={prefersReduced ? { pathLength: 1 } : { pathLength: 0 }}
+        animate={{ pathLength: 1 }}
+        transition={{ duration: 0.9, delay: 0.7, ease: 'easeInOut' }}
+      />
+    </svg>
   )
 }
 
 export function Hero() {
   const prefersReduced = useReducedMotion()
-  const fade = prefersReduced
-    ? { initial: { opacity: 0 }, animate: { opacity: 1 } }
-    : {
-        initial: { opacity: 0, y: 16 },
-        animate: { opacity: 1, y: 0 },
-        transition: { duration: 0.6, ease: easeOut },
-      }
+
+  const rise = (delay: number) =>
+    prefersReduced
+      ? { initial: { opacity: 0 }, animate: { opacity: 1 }, transition: { delay: 0 } }
+      : {
+          initial: { opacity: 0, y: 16 },
+          animate: { opacity: 1, y: 0 },
+          transition: { duration: 0.7, ease: easeOut, delay },
+        }
 
   return (
-    <section className="container relative pt-20 pb-28 sm:pt-28">
-      <div className="grid items-center gap-12 lg:grid-cols-[1.4fr_1fr]">
+    <section className="container relative pb-20 pt-14 sm:pt-20">
+      <div className="grid items-center gap-16 lg:grid-cols-[1.5fr_1fr]">
         <div>
-          <motion.p
-            {...fade}
-            className="font-mono text-xs uppercase tracking-[0.2em] text-muted-foreground"
-          >
-            // hello.world
+          <motion.p {...rise(0)} className="tag-sticker bg-pop-mint">
+            {siteConfig.role} @ {siteConfig.company.name}
           </motion.p>
 
-          <h1 className="mt-3 text-balance text-5xl font-bold leading-[1.05] tracking-tight sm:text-6xl lg:text-7xl">
-            <Words text={`Hi, I'm`} className="text-foreground" />{' '}
-            <Words text={siteConfig.name + '.'} className="iri-text" />
-            <br />
-            <Words text="I build things," className="text-foreground" />
-            <br />
-            <Words text="sometimes I break them on purpose." className="text-foreground/60" />
-          </h1>
+          <motion.h1
+            {...rise(0.08)}
+            className="display mt-8 text-balance text-[3.4rem] leading-[1.02] sm:text-7xl lg:text-[5.2rem]"
+          >
+            Hi, I&apos;m Aidan.
+            <br />I build{' '}
+            <span className="accent-text relative inline-block whitespace-nowrap">
+              the whole thing
+              <Squiggle />
+            </span>
+            .
+          </motion.h1>
 
           <motion.p
-            {...fade}
-            transition={{ ...(fade.transition ?? {}), delay: 0.5 }}
-            className="pretty-wrap mt-6 max-w-xl text-lg text-muted-foreground"
+            {...rise(0.18)}
+            className="pretty-wrap mt-8 max-w-md text-lg leading-relaxed text-muted-foreground"
           >
             {siteConfig.blurb}
           </motion.p>
 
-          <motion.div
-            {...fade}
-            transition={{ ...(fade.transition ?? {}), delay: 0.6 }}
-            className="mt-8 flex flex-wrap items-center gap-3"
-          >
+          <motion.div {...rise(0.28)} className="mt-10 flex flex-wrap items-center gap-4">
             <Magnetic>
               <PillLink href="/projects" variant="solid">
                 See the work
-                <ArrowRight className="h-4 w-4" />
+                <ArrowRight className="h-4 w-4" aria-hidden="true" />
               </PillLink>
             </Magnetic>
             <Magnetic>
@@ -109,16 +85,16 @@ export function Hero() {
                 Read the blog
               </PillLink>
             </Magnetic>
-            <div className="ml-2 flex items-center gap-2">
+            <div className="ml-1 flex items-center gap-1">
               <Magnetic strength={0.35}>
                 <a
                   href={`https://github.com/${siteConfig.socials.github}`}
                   target="_blank"
                   rel="noreferrer noopener"
                   aria-label="GitHub"
-                  className="rounded-full p-2 text-muted-foreground transition hover:bg-white/5 hover:text-foreground"
+                  className="rounded-full p-2 text-foreground/70 transition hover:-rotate-6 hover:text-accent"
                 >
-                  <Github className="h-5 w-5" />
+                  <Github className="h-6 w-6" />
                 </a>
               </Magnetic>
               <Magnetic strength={0.35}>
@@ -127,44 +103,42 @@ export function Hero() {
                   target="_blank"
                   rel="noreferrer noopener"
                   aria-label="LinkedIn"
-                  className="rounded-full p-2 text-muted-foreground transition hover:bg-white/5 hover:text-foreground"
+                  className="rounded-full p-2 text-foreground/70 transition hover:rotate-6 hover:text-accent"
                 >
-                  <Linkedin className="h-5 w-5" />
+                  <Linkedin className="h-6 w-6" />
                 </a>
               </Magnetic>
             </div>
           </motion.div>
-
-          <motion.div
-            {...fade}
-            transition={{ ...(fade.transition ?? {}), delay: 0.75 }}
-            className="mt-10 max-w-md"
-          >
-            <TerminalPrompt
-              lines={[
-                '$ whoami',
-                `${siteConfig.name.toLowerCase()} — ${siteConfig.role.toLowerCase()} @ ${siteConfig.company.name}`,
-                '$ cat interests.txt',
-                'full-stack engineering · vulnerability research · the occasional CTF',
-              ]}
-            />
-          </motion.div>
         </div>
 
+        {/* Avatar sticker, slightly askew, straightens when you hover */}
         <motion.div
-          {...fade}
-          transition={{ ...(fade.transition ?? {}), delay: 0.2 }}
-          className="relative flex items-center justify-center lg:justify-end"
+          {...rise(0.15)}
+          className="relative mx-auto w-fit lg:mx-0 lg:justify-self-end"
         >
-          <div className="relative">
-            <div className="absolute inset-0 -z-10 rounded-3xl bg-white/[0.04] blur-3xl" />
-            <div className="glass rounded-3xl p-6">
-              <PixelAvatar size={220} />
-            </div>
-            <div className="mt-3 text-center font-mono text-xs text-muted-foreground">
-              <span className="text-accent">●</span> online · accepting interesting problems
-            </div>
+          <div className="pop-card pop-card-hover group rotate-2 rounded-3xl p-7 transition-transform duration-300 hover:rotate-0">
+            {/* tape strips */}
+            <span
+              aria-hidden="true"
+              className="absolute -top-3 left-8 h-6 w-16 -rotate-6 rounded-sm bg-pop-butter/90 shadow-sm"
+            />
+            <span
+              aria-hidden="true"
+              className="absolute -top-3 right-8 h-6 w-16 rotate-6 rounded-sm bg-pop-sky/90 shadow-sm"
+            />
+            <PixelAvatar size={210} />
+            <p className="mt-4 text-center font-mono text-xs text-muted-foreground">
+              me, in 16×16 pixels
+            </p>
           </div>
+          <p className="mt-5 flex items-center justify-center gap-2 text-sm text-muted-foreground lg:justify-end">
+            <span className="relative flex h-2.5 w-2.5" aria-hidden="true">
+              <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-pop-leaf/60" />
+              <span className="relative inline-flex h-2.5 w-2.5 rounded-full bg-pop-leaf" />
+            </span>
+            {siteConfig.availability}
+          </p>
         </motion.div>
       </div>
     </section>

@@ -4,7 +4,7 @@ import { cn } from '@/lib/utils'
 
 /**
  * Components available inside any .mdx file under /content/**
- * Add custom ones here — they become "free imports" inside posts.
+ * Add custom ones here, they become "free imports" inside posts.
  */
 export const mdxComponents = {
   a: ({ href = '#', className, children, ...props }: ComponentProps<'a'>) => {
@@ -38,11 +38,11 @@ export const mdxComponents = {
     children: React.ReactNode
   }) => {
     const styles: Record<string, string> = {
-      info: 'border-sky-500/30 bg-sky-500/5 text-sky-200',
-      low: 'border-emerald-500/30 bg-emerald-500/5 text-emerald-200',
-      medium: 'border-amber-500/30 bg-amber-500/5 text-amber-200',
-      high: 'border-orange-500/30 bg-orange-500/5 text-orange-200',
-      critical: 'border-rose-500/30 bg-rose-500/5 text-rose-200',
+      info: 'border-sky-600/30 bg-sky-600/[0.06] text-sky-900',
+      low: 'border-emerald-600/30 bg-emerald-600/[0.06] text-emerald-900',
+      medium: 'border-amber-600/30 bg-amber-600/[0.06] text-amber-900',
+      high: 'border-orange-600/30 bg-orange-600/[0.06] text-orange-900',
+      critical: 'border-rose-600/30 bg-rose-600/[0.06] text-rose-900',
     }
     return (
       <aside
@@ -54,7 +54,7 @@ export const mdxComponents = {
         <div className="mb-1 text-[10px] uppercase tracking-[0.2em] opacity-80">
           {severity} {title ? `· ${title}` : ''}
         </div>
-        <div className="prose prose-invert max-w-none text-current">{children}</div>
+        <div className="prose max-w-none text-current">{children}</div>
       </aside>
     )
   },

@@ -1,6 +1,8 @@
 import { cn } from '@/lib/utils'
 import type { ElementType } from 'react'
 
+type Tone = 'butter' | 'sky' | 'blush' | 'mint'
+
 type Props = {
   eyebrow?: string
   title: string
@@ -9,6 +11,15 @@ type Props = {
   align?: 'left' | 'center'
   /** 1 for page-level (one per page), 2 for in-page sections. Defaults to 2. */
   level?: 1 | 2
+  /** Sticker colour behind the eyebrow. */
+  tone?: Tone
+}
+
+const tones: Record<Tone, string> = {
+  butter: 'bg-pop-butter',
+  sky: 'bg-pop-sky',
+  blush: 'bg-pop-blush',
+  mint: 'bg-pop-mint',
 }
 
 export function SectionHeading({
@@ -18,34 +29,28 @@ export function SectionHeading({
   className,
   align = 'left',
   level = 2,
+  tone = 'butter',
 }: Props) {
   const HeadingTag: ElementType = level === 1 ? 'h1' : 'h2'
   return (
-    <div
-      className={cn(
-        'mb-10 max-w-2xl',
-        align === 'center' && 'mx-auto text-center',
-        className,
-      )}
-    >
+    <div className={cn('mb-12 max-w-2xl', align === 'center' && 'mx-auto text-center', className)}>
       {eyebrow && (
-        <p
-          className="mb-2 font-mono text-xs uppercase tracking-[0.2em] text-muted-foreground"
-          aria-hidden="true"
-        >
-          // {eyebrow}
+        <p className="mb-5" aria-hidden="true">
+          <span className={cn('tag-sticker', tones[tone])}>{eyebrow}</span>
         </p>
       )}
       <HeadingTag
         className={cn(
-          'text-balance font-bold tracking-tight',
-          level === 1 ? 'text-4xl sm:text-5xl' : 'text-3xl sm:text-4xl',
+          'display text-balance',
+          level === 1 ? 'text-display-sm sm:text-display-md' : 'text-4xl sm:text-5xl',
         )}
       >
         {title}
       </HeadingTag>
       {description && (
-        <p className="pretty-wrap mt-3 text-muted-foreground">{description}</p>
+        <p className="pretty-wrap mt-5 text-lg leading-relaxed text-muted-foreground">
+          {description}
+        </p>
       )}
     </div>
   )

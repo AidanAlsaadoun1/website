@@ -1,15 +1,18 @@
 # dev-aidan.com
 
-Personal site for Aidan — Founding Engineer at sprintworks. Built with Next.js 15, deployed on Vercel.
+Personal site for Aidan, Founding Engineer at sprintworks. Built with Next.js 15, deployed on Vercel.
 
-Glass-meets-cyber aesthetic: frosted cards on an animated aurora gradient, mono typography for the
-security-flavored bits, a `$ whoami` terminal flourish, and a pixel-art avatar that bobs gently in the hero.
+Playful "zine" aesthetic: warm cream paper, Instrument Serif display type, sticker cards with ink
+borders and hard offset shadows, pastel pops (butter/sky/blush/mint), a marquee band, a hand-drawn
+squiggle, and the pixel avatar on a taped-down polaroid. The site is positioned as a full-stack
+engineer's portfolio, security is one credential and one blog category, not the headline.
 
 ## Stack
 
 - **Next.js 15** (App Router, RSC by default)
 - **TypeScript** (strict, with `noUncheckedIndexedAccess`)
-- **Tailwind v3.4** + CSS-variable design tokens
+- **Tailwind v3.4** + CSS-variable design tokens (`app/globals.css` holds the palette and type system)
+- **Instrument Serif** self-hosted via `@fontsource` for display type; Geist Sans/Mono for everything else
 - **Framer Motion** for entrance + hover micro-interactions (respects `prefers-reduced-motion`)
 - **MDX** via `next-mdx-remote/rsc` + `gray-matter` for the unified blog (tech + security)
 - **Shiki + rehype-pretty-code** for syntax highlighting
@@ -43,10 +46,10 @@ pnpm lint
 
 ```
 app/                   # routes (App Router)
-  page.tsx             # home — hero, about, featured projects, latest posts
+  page.tsx             # home, hero, about, featured projects, latest posts
   projects/            # /projects + /projects/[slug] case studies
   blog/                # /blog + /blog/[slug] MDX posts
-  # (security/ used to be its own section — now merged into /blog with a tag filter)
+  # (security/ used to be its own section, now merged into /blog with a tag filter)
   talks/               # speaking + podcasts
   certifications/      # cert badges
   contact/             # LinkedIn + GitHub cards only (no inbox, by design)
@@ -54,15 +57,17 @@ app/                   # routes (App Router)
   robots.ts, sitemap.ts
 
 components/
-  site/                # hero, glass-card, aurora-background, pixel-avatar,
-                       # terminal-prompt, nav, footer, project-card, etc.
+  site/                # hero, glass-card (panel primitive), aurora-background,
+                       # nav, footer, project-card, post-card, section-heading, etc.
+                       # (terminal-prompt + pixel-avatar are legacy from the old
+                       #  design and no longer used anywhere, safe to delete)
   mdx/                 # custom components usable inside .mdx files
                        # (VulnCallout, CVELink, themed links)
 
 config/site.ts         # ⭐ SINGLE SOURCE OF TRUTH for personal data
 content/
   blog/*.mdx           # blog posts
-  # (security MDX now lives in blog/ — tag it `security` to surface it in the security filter)
+  # (security MDX now lives in blog/, tag it `security` to surface it in the security filter)
   projects/*.mdx       # optional curated case studies (override GitHub cards)
 
 lib/
@@ -76,7 +81,7 @@ lib/
 
 ### Edit personal data
 
-Open `config/site.ts`. Everything personal lives there — name, blurb, socials, certifications, talks,
+Open `config/site.ts`. Everything personal lives there, name, blurb, socials, certifications, talks,
 "currently exploring" list, nav links, SEO. One file to edit.
 
 ### Add a blog post
@@ -97,11 +102,11 @@ draft: false
 ---
 ```
 
-Write MDX below. You can embed components — for example `<VulnCallout severity="high" title="optional">` or `<CVELink id="CVE-2024-12345" />`.
+Write MDX below. You can embed components, for example `<VulnCallout severity="high" title="optional">` or `<CVELink id="CVE-2024-12345" />`.
 
 ### Add a security writeup
 
-Security writeups live in the same `content/blog/` folder as everything else — just give the
+Security writeups live in the same `content/blog/` folder as everything else, just give the
 frontmatter the `security` tag (and any other relevant ones). Optional security-specific frontmatter
 fields are recognised:
 
@@ -116,7 +121,7 @@ eyebrow flips from `// blog` to `// writeup`.
 
 ### Add a project case study
 
-`content/projects/<slug>.mdx` — these override the GitHub-fetched card if the slug matches a repo name.
+`content/projects/<slug>.mdx`, these override the GitHub-fetched card if the slug matches a repo name.
 
 ```yaml
 title: Project name
@@ -132,7 +137,7 @@ stack: [Next.js, TypeScript, Postgres]
 1. **Push to GitHub.** Recommended repo name: `dev-aidan`.
 2. **Import on Vercel.** It auto-detects Next.js.
 3. **Set env vars** in Project Settings → Environment Variables:
-   - `GITHUB_TOKEN` — fine-grained PAT with `Contents: read` and `Metadata: read`.
+   - `GITHUB_TOKEN`, fine-grained PAT with `Contents: read` and `Metadata: read`.
      Without it, the projects section shows a setup placeholder.
    - `NEXT_PUBLIC_SITE_URL=https://dev-aidan.com`
 4. **First deploy** happens automatically.
@@ -150,8 +155,7 @@ In Namecheap: **Domain List → Manage → Advanced DNS → Add New Record**:
 
 Wait a minute for SSL provisioning, then visit `https://dev-aidan.com`.
 
-(Tip: if you currently have `URL Redirect` records on `@` or `www` in Namecheap, delete them first —
-they'll shadow the A/CNAME silently.)
+(Tip: if you currently have `URL Redirect` records on `@` or `www` in Namecheap, delete them first, they'll shadow the A/CNAME silently.)
 
 ### Then: shut down AWS
 
@@ -183,4 +187,4 @@ Once the new site is live:
 
 ## License
 
-Code: MIT. Words: CC BY 4.0. Pixel-art avatar: do what you want with it.
+Code: MIT. Words: CC BY 4.0.

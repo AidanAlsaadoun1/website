@@ -14,7 +14,7 @@ export function formatDate(input: string | Date): string {
   })
 }
 
-/** Month-precision formatter — for certifications where the source only gives month+year. */
+/** Month-precision formatter, for certifications where the source only gives month+year. */
 export function formatMonthYear(input: string | Date): string {
   const date = typeof input === 'string' ? new Date(input) : input
   return date.toLocaleDateString('en-GB', {

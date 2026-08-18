@@ -9,7 +9,7 @@ type FilterOption = {
 }
 
 type Props = {
-  /** Currently selected value — undefined means "All". */
+  /** Currently selected value, undefined means "All". */
   current: string | undefined
   /** Base path the chips link to (without query). */
   baseHref: string
@@ -22,7 +22,7 @@ type Props = {
 }
 
 /**
- * URL-driven filter chip row. No client JS — each chip is a server-rendered link.
+ * URL-driven filter chip row. No client JS, each chip is a server-rendered link.
  * The active chip carries aria-pressed="true" so screen readers announce the state.
  */
 export function TagFilter({
@@ -46,19 +46,17 @@ export function TagFilter({
                 href={href}
                 aria-current={isActive ? 'true' : undefined}
                 className={cn(
-                  'inline-flex items-center gap-1.5 rounded-full border px-3 py-1 font-mono text-[11px] uppercase tracking-wider transition',
+                  'inline-flex items-center gap-1.5 rounded-full border-2 border-foreground px-3.5 py-1.5 font-mono text-[11px] uppercase tracking-wider transition-all duration-200',
                   isActive
-                    ? 'border-white/40 bg-white/10 text-foreground'
-                    : 'border-white/15 bg-white/[0.03] text-muted-foreground hover:border-white/30 hover:bg-white/[0.06] hover:text-foreground',
+                    ? 'bg-foreground text-base shadow-[3px_3px_0_0_rgb(var(--accent))]'
+                    : 'bg-elevated text-foreground hover:-translate-y-0.5 hover:bg-pop-butter',
                 )}
               >
                 {opt.label}
                 <span
                   className={cn(
                     'rounded-full px-1.5 text-[10px]',
-                    isActive
-                      ? 'bg-foreground/15 text-foreground'
-                      : 'bg-white/[0.06] text-muted-foreground',
+                    isActive ? 'bg-base/20 text-base' : 'bg-foreground/10 text-foreground/70',
                   )}
                   aria-label={`${opt.count} posts`}
                 >

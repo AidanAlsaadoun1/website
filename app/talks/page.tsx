@@ -24,7 +24,7 @@ export default function TalksPage() {
       />
       <SectionHeading
         level={1}
-        eyebrow="talks"
+        eyebrow="Talks"
         title="Speaking, in public, on purpose"
         description="Conferences, meetups, and podcasts I've taken part in."
       />
@@ -40,10 +40,10 @@ export default function TalksPage() {
             <li key={`${talk.title}-${talk.date}`}>
               <GlassCard interactive className="flex items-center justify-between gap-6">
                 <div>
-                  <p className="font-mono text-xs uppercase tracking-[0.2em] text-accent">
+                  <p className="font-mono text-[11px] uppercase tracking-[0.18em] text-accent">
                     {talk.type}
                   </p>
-                  <h3 className="mt-1 text-lg font-semibold">{talk.title}</h3>
+                  <h3 className="display mt-1 text-2xl">{talk.title}</h3>
                   <p className="mt-1 text-sm text-muted-foreground">
                     {talk.event} · {formatDate(talk.date)}
                   </p>

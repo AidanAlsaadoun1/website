@@ -1,19 +1,19 @@
 ---
 title: Deploy a Next.js portfolio to AWS in 10 minutes with SST v3
 date: 2025-06-28
-summary: From an empty folder to a live Next.js portfolio on AWS with HTTPS, a global CDN, and automatic deployments — no CloudFormation, no console clicking, no drama.
+summary: From an empty folder to a live Next.js portfolio on AWS with HTTPS, a global CDN, and automatic deployments, no CloudFormation, no console clicking, no drama.
 category: engineering
 tags: [sst, aws, nextjs, typescript, cloudfront, s3, deployment]
 ---
 
 > **TL;DR:** Stop wrestling with deployment. We're going from absolutely nothing to a live Next.js
-> portfolio on AWS in 10 minutes. No backend drama, no endless configuration files — just a working
+> portfolio on AWS in 10 minutes. No backend drama, no endless configuration files, just a working
 > website that loads faster than you can brew a cuppa.
 
 ## Why this guide exists
 
 Most deployment tutorials read like IKEA instructions written by someone who's never assembled furniture.
-This one's different. We're using **SST v3** — the tool that makes AWS deployment actually enjoyable.
+This one's different. We're using **SST v3**, the tool that makes AWS deployment actually enjoyable.
 Think of it as the difference between building a wardrobe with a proper toolkit and trying to build one
 with a butter knife.
 
@@ -21,10 +21,10 @@ What you'll have in 10 minutes:
 
 - ✅ Live Next.js app on AWS
 - ✅ Custom domain with HTTPS
-- ✅ Global CDN — fast everywhere
+- ✅ Global CDN, fast everywhere
 - ✅ Automatic deployments
 
-## Step 1 — Prerequisites (2 minutes)
+## Step 1: Prerequisites (2 minutes)
 
 Before we start, you'll need:
 
@@ -48,7 +48,7 @@ When configuring AWS, you'll need:
 **macOS/Linux only.** SST v3 doesn't fully support Windows yet, so if you're on Windows either use WSL2
 or wait for full support.
 
-## Step 2 — Create your project (1 minute)
+## Step 2: Create your project (1 minute)
 
 Let's create a new Next.js portfolio from scratch:
 
@@ -79,11 +79,11 @@ my-portfolio/
 ```
 
 Once your infra scales out, it's worth moving the configuration out of `sst.config.ts` and into its own
-folder — or even its own repo.
+folder, or even its own repo.
 
-## Step 3 — Customise your Next.js app (3 minutes)
+## Step 3: Customise your Next.js app (3 minutes)
 
-Make it yours. Here's a tidy, professional portfolio — drop this into `app/page.tsx`:
+Make it yours. Here's a tidy, professional portfolio, drop this into `app/page.tsx`:
 
 ```tsx
 // app/page.tsx
@@ -132,7 +132,7 @@ export default function Home() {
 }
 ```
 
-## Step 4 — Configure infrastructure (1 minute)
+## Step 4: Configure infrastructure (1 minute)
 
 The magic happens in `sst.config.ts`. Here's a minimal configuration that gives you everything:
 
@@ -158,7 +158,7 @@ export default $config({
         comment: 'My Portfolio UI',
         transform: {
           distribution: {
-            priceClass: 'PriceClass_100', // Cheapest — edge nodes in EU/US regions
+            priceClass: 'PriceClass_100', // Cheapest, edge nodes in EU/US regions
             restrictions: {
               geoRestriction: {
                 restrictionType: 'whitelist',
@@ -184,7 +184,7 @@ That tiny config file sets up:
 - ✅ SSL certificate for HTTPS
 - ✅ SPA routing support
 
-## Step 5 — Deploy to AWS (2 minutes)
+## Step 5: Deploy to AWS (2 minutes)
 
 Here's where the magic happens. Deploy with one command:
 
@@ -208,7 +208,7 @@ You'll see something like:
    MyWeb: https://d1234567890.cloudfront.net
 ```
 
-## Step 6 — Add a custom domain (optional, 1 minute)
+## Step 6: Add a custom domain (optional, 1 minute)
 
 Want your own domain? Update `sst.config.ts`:
 
@@ -261,14 +261,14 @@ production, but safe.
 
 ## Troubleshooting
 
-**"Command not found: sst"** — make sure you're running `npx sst`, not `sst`.
+**"Command not found: sst"**: make sure you're running `npx sst`, not `sst`.
 
-**"Invalid credentials"** — run `aws configure` again and double-check your access keys.
+**"Invalid credentials"**: run `aws configure` again and double-check your access keys.
 
-**"Domain already exists"** — each domain can only be used once per AWS account. Try a different one
+**"Domain already exists"**: each domain can only be used once per AWS account. Try a different one
 or use the CloudFront URL.
 
-**"Build failed"** — make sure your Next app builds locally first:
+**"Build failed"**: make sure your Next app builds locally first:
 
 ```bash
 cd app && npm run build
@@ -279,10 +279,10 @@ cd app && npm run build
 In 10 minutes you now have:
 
 - ✅ Professional React/Next.js portfolio hosted on AWS
-- ✅ Global CDN — your site loads fast worldwide
-- ✅ HTTPS by default — secure and SEO-friendly
-- ✅ Scalable infrastructure — handles millions of visitors
-- ✅ Simple deployments — just `npx sst deploy`
+- ✅ Global CDN, your site loads fast worldwide
+- ✅ HTTPS by default, secure and SEO-friendly
+- ✅ Scalable infrastructure, handles millions of visitors
+- ✅ Simple deployments, just `npx sst deploy`
 
 Your site costs roughly £1–3/month for normal traffic. Cool, cost-effective, and blazing fast.
 

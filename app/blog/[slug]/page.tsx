@@ -54,13 +54,12 @@ export default async function BlogPostPage({
       />
 
       <header className="mb-10">
-        <p
-          className="font-mono text-xs uppercase tracking-[0.2em] text-muted-foreground"
-          aria-hidden="true"
-        >
-          {isSecurityFlavoured ? '// writeup' : '// blog'}
+        <p aria-hidden="true">
+          <span className={`tag-sticker ${isSecurityFlavoured ? 'bg-pop-blush' : 'bg-pop-sky'}`}>
+            {isSecurityFlavoured ? 'Writeup' : 'Essay'}
+          </span>
         </p>
-        <h1 className="mt-2 text-balance text-4xl font-bold tracking-tight sm:text-5xl">
+        <h1 className="display mt-3 text-balance text-display-sm sm:text-display-md">
           {post.frontmatter.title}
         </h1>
         <div className="mt-4 flex flex-wrap items-center gap-3 text-sm text-muted-foreground">
@@ -72,7 +71,7 @@ export default async function BlogPostPage({
           {severity && (
             <>
               <span aria-hidden="true">·</span>
-              <span className="rounded-full border border-white/15 bg-white/5 px-2 py-0.5 font-mono text-[10px] uppercase tracking-wider">
+              <span className="rounded-full border border-foreground/20 px-2 py-0.5 font-mono text-[10px] uppercase tracking-wider">
                 <span className="sr-only">Severity: </span>
                 {severity}
               </span>
@@ -98,7 +97,7 @@ export default async function BlogPostPage({
             {tags.map((t) => (
               <li
                 key={t}
-                className="rounded-full border border-white/15 bg-white/5 px-2 py-0.5 font-mono text-[10px] uppercase tracking-wider text-muted-foreground"
+                className="rounded-full border border-foreground/15 px-2 py-0.5 font-mono text-[10px] uppercase tracking-wider text-muted-foreground"
               >
                 {t}
               </li>
@@ -107,7 +106,7 @@ export default async function BlogPostPage({
         )}
       </header>
 
-      <div className="prose prose-invert max-w-none">
+      <div className="prose max-w-none">
         <Markdown source={post.content} />
       </div>
     </article>

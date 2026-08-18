@@ -6,7 +6,8 @@ import { getPinnedRepos } from '@/lib/github'
 
 export const metadata: Metadata = {
   title: 'Projects',
-  description: 'Things I have built — pulled live from my pinned GitHub repos.',
+  description:
+    'Full-stack projects (apps, services and tooling) pulled live from my pinned GitHub repos.',
 }
 
 export default async function ProjectsPage() {
@@ -21,9 +22,9 @@ export default async function ProjectsPage() {
       />
       <SectionHeading
         level={1}
-        eyebrow="projects"
-        title="Things I've shipped, broken, or kept tinkering with"
-        description="Repos I've pinned on GitHub plus the occasional curated case study. Fresh on every build."
+        eyebrow="Projects"
+        title="Things I've built"
+        description="Apps, services and tooling, front end through to infrastructure. Pinned straight from GitHub, so this list is as current as my last push."
       />
       <ul
         className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3"

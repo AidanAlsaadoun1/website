@@ -2,7 +2,7 @@ import { ImageResponse } from 'next/og'
 import { siteConfig } from '@/config/site'
 
 export const runtime = 'edge'
-export const alt = 'Aidan — Founding Engineer'
+export const alt = 'Aidan Alsaadoun · Full-Stack Engineer'
 export const size = { width: 1200, height: 630 }
 export const contentType = 'image/png'
 
@@ -18,44 +18,56 @@ export default async function OpengraphImage() {
           justifyContent: 'space-between',
           padding: 72,
           background:
-            'radial-gradient(120% 80% at 50% 0%, rgba(255,255,255,0.06), transparent 60%), #08090c',
-          color: '#f5f5f7',
-          fontFamily: 'sans-serif',
+            'radial-gradient(60% 80% at 15% 0%, rgba(255,233,163,0.8), transparent 60%), radial-gradient(60% 80% at 90% 100%, rgba(214,228,255,0.8), transparent 60%), #faf7f0',
+          color: '#1c1a17',
+          fontFamily: 'serif',
         }}
       >
         <div
           style={{
             display: 'flex',
+            justifyContent: 'space-between',
             alignItems: 'center',
-            gap: 16,
-            color: '#c7e4ff',
+            color: '#6e685e',
             fontFamily: 'monospace',
-            fontSize: 28,
+            fontSize: 24,
+            letterSpacing: 3,
+            textTransform: 'uppercase',
+            borderBottom: '2px solid #1c1a17',
+            paddingBottom: 28,
           }}
         >
-          <span>$</span>
-          <span>whoami</span>
+          <span>
+            {siteConfig.role} · {siteConfig.company.name}
+          </span>
+          <span>{siteConfig.location}</span>
         </div>
-        <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
-          <div style={{ fontSize: 110, lineHeight: 1, letterSpacing: '-0.04em', fontWeight: 700 }}>
-            {siteConfig.name}.
+
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 20 }}>
+          <div style={{ fontSize: 104, lineHeight: 1, letterSpacing: '-0.03em' }}>
+            {siteConfig.fullName}
+            <span style={{ color: '#6e685e' }}>,</span>{' '}
+            <span style={{ color: '#c2410c', fontStyle: 'italic' }}>full-stack engineer</span>
           </div>
-          <div style={{ fontSize: 36, color: '#a1a1aa' }}>
-            {siteConfig.role} at {siteConfig.company.name}
+          <div style={{ fontSize: 30, color: '#6e685e', fontFamily: 'sans-serif', maxWidth: 900 }}>
+            {siteConfig.positioning}
           </div>
         </div>
+
         <div
           style={{
             display: 'flex',
             justifyContent: 'space-between',
             alignItems: 'center',
-            color: '#a1a1aa',
+            color: '#6e685e',
             fontSize: 22,
             fontFamily: 'monospace',
+            borderTop: '2px solid #1c1a17',
+            paddingTop: 28,
           }}
         >
           <span>dev-aidan.com</span>
-          <span>full-stack · vulnerability research</span>
+          <span>TypeScript · React · Node · AWS</span>
         </div>
       </div>
     ),

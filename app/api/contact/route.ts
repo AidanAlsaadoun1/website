@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server'
 
 /**
- * Contact endpoint decommissioned — Aidan doesn't run a public inbox anymore.
+ * Contact endpoint decommissioned, Aidan doesn't run a public inbox anymore.
  * Anything that hits this URL gets a polite "Gone" response.
  *
  * Safe to `rm -rf app/api` locally.

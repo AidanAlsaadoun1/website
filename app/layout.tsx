@@ -1,6 +1,8 @@
 import type { Metadata, Viewport } from 'next'
 import { GeistMono } from 'geist/font/mono'
 import { GeistSans } from 'geist/font/sans'
+import '@fontsource/instrument-serif/400.css'
+import '@fontsource/instrument-serif/400-italic.css'
 import './globals.css'
 import { AuroraBackground } from '@/components/site/aurora-background'
 import { Nav } from '@/components/site/nav'
@@ -12,7 +14,7 @@ export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
   title: {
     default: siteConfig.seo.title,
-    template: `%s — ${siteConfig.name}`,
+    template: `%s · ${siteConfig.fullName}`,
   },
   description: siteConfig.seo.description,
   keywords: [...siteConfig.seo.keywords],
@@ -23,7 +25,7 @@ export const metadata: Metadata = {
     url: siteUrl,
     title: siteConfig.seo.title,
     description: siteConfig.seo.description,
-    siteName: siteConfig.name,
+    siteName: siteConfig.fullName,
   },
   twitter: {
     card: 'summary_large_image',
@@ -43,8 +45,8 @@ export const metadata: Metadata = {
 }
 
 export const viewport: Viewport = {
-  themeColor: '#0a0d1a',
-  colorScheme: 'dark',
+  themeColor: '#faf7f0',
+  colorScheme: 'light',
   width: 'device-width',
   initialScale: 1,
 }
@@ -53,7 +55,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html
       lang="en"
-      className={cn(GeistSans.variable, GeistMono.variable, 'dark')}
+      className={cn(GeistSans.variable, GeistMono.variable)}
       suppressHydrationWarning
     >
       <body className="relative overflow-x-hidden">

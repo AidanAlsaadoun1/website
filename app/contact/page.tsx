@@ -42,9 +42,9 @@ export default function ContactPage() {
       <Reveal>
         <SectionHeading
           level={1}
-          eyebrow="contact"
+          eyebrow="Contact"
           title="Find me elsewhere"
-          description="I don't run a public inbox — the best places to say hi are LinkedIn and GitHub."
+          description="I don't run a public inbox. The best places to talk about work, hiring or collaboration are LinkedIn and GitHub."
         />
       </Reveal>
 
@@ -62,7 +62,7 @@ export default function ContactPage() {
                   target="_blank"
                   rel="noreferrer noopener"
                   className="absolute inset-0"
-                  aria-label={`${label} — opens in a new tab`}
+                  aria-label={`${label} (opens in a new tab)`}
                 />
                 <div className="flex items-center justify-between">
                   <Icon className="h-7 w-7 text-foreground" aria-hidden="true" />
@@ -72,7 +72,7 @@ export default function ContactPage() {
                   />
                 </div>
                 <div>
-                  <h2 className="text-xl font-semibold">{label}</h2>
+                  <h2 className="display text-2xl">{label}</h2>
                   <p className="mt-1 font-mono text-xs text-muted-foreground">{handle}</p>
                 </div>
                 <p className="pretty-wrap text-sm leading-relaxed text-muted-foreground">{blurb}</p>

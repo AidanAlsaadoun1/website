@@ -12,7 +12,6 @@ export function Nav() {
   const pathname = usePathname()
   const [open, setOpen] = useState(false)
   const [scrolled, setScrolled] = useState(false)
-  const [hovered, setHovered] = useState<string | null>(null)
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 8)
@@ -28,55 +27,52 @@ export function Nav() {
   return (
     <header
       className={cn(
-        'sticky top-0 z-40 transition-all duration-500',
+        'sticky top-0 z-40 transition-all duration-300',
         scrolled ? 'glass-bar' : 'bg-transparent',
       )}
     >
-      <div className="container flex h-16 items-center justify-between">
+      <div className="container flex h-20 items-center justify-between gap-6">
         <Link
           href="/"
-          className="group flex items-center gap-2 font-mono text-sm tracking-wider"
-          aria-label={`${siteConfig.name} — home`}
+          className="group flex items-center gap-2.5"
+          aria-label={`${siteConfig.fullName}, home`}
         >
-          <span className="text-accent" aria-hidden="true">$</span>
-          <span className="text-foreground">
-            {siteConfig.name.toLowerCase()}
-            <span className="text-accent terminal-cursor" aria-hidden="true"></span>
+          <span
+            aria-hidden="true"
+            className="h-3 w-3 rounded-full border-2 border-foreground bg-pop-sun transition-transform duration-300 group-hover:rotate-45 group-hover:scale-110"
+          />
+          <span className="display text-xl text-foreground transition-colors group-hover:text-accent">
+            {siteConfig.fullName}
           </span>
         </Link>
 
-        <nav
-          aria-label="Primary"
-          className="relative hidden items-center gap-0.5 md:flex"
-          onMouseLeave={() => setHovered(null)}
-        >
+        <nav aria-label="Primary" className="relative hidden items-center gap-8 md:flex">
           {siteConfig.navLinks.map((link) => {
             const active = pathname === link.href || pathname.startsWith(link.href + '/')
-            const showPill = hovered === link.href || (hovered === null && active)
             return (
               <Link
                 key={link.href}
                 href={link.href}
-                onMouseEnter={() => setHovered(link.href)}
                 aria-current={active ? 'page' : undefined}
-                className="relative rounded-full px-4 py-1.5 text-sm transition-colors"
+                className={cn(
+                  'group relative py-1 text-sm transition-colors',
+                  active ? 'text-foreground' : 'text-muted-foreground hover:text-foreground',
+                )}
               >
-                {showPill && (
+                {link.label}
+                {active ? (
                   <motion.span
                     aria-hidden="true"
-                    layoutId="nav-pill"
-                    className="absolute inset-0 -z-10 rounded-full bg-white/[0.06] ring-1 ring-inset ring-white/10"
-                    transition={{ type: 'spring', stiffness: 380, damping: 32 }}
+                    layoutId="nav-underline"
+                    className="absolute -bottom-1 left-0 h-[3px] w-full rounded-full bg-accent"
+                    transition={{ type: 'spring', stiffness: 400, damping: 30 }}
+                  />
+                ) : (
+                  <span
+                    aria-hidden="true"
+                    className="absolute -bottom-1 left-0 h-[3px] w-full origin-left scale-x-0 rounded-full bg-pop-sun transition-transform duration-300 group-hover:scale-x-100"
                   />
                 )}
-                <span
-                  className={cn(
-                    'relative transition-colors',
-                    active || hovered === link.href ? 'text-foreground' : 'text-muted-foreground',
-                  )}
-                >
-                  {link.label}
-                </span>
               </Link>
             )
           })}
@@ -88,7 +84,7 @@ export function Nav() {
           aria-expanded={open}
           aria-controls="mobile-nav"
           onClick={() => setOpen((v) => !v)}
-          className="rounded-md p-2 text-muted-foreground hover:bg-white/5 md:hidden"
+          className="-mr-2 rounded-md p-2 text-muted-foreground transition hover:text-foreground md:hidden"
         >
           {open ? <X className="h-5 w-5" aria-hidden="true" /> : <Menu className="h-5 w-5" aria-hidden="true" />}
         </button>
@@ -104,9 +100,9 @@ export function Nav() {
             animate={{ height: 'auto', opacity: 1 }}
             exit={{ height: 0, opacity: 0 }}
             transition={{ duration: 0.25, ease: [0.22, 1, 0.36, 1] }}
-            className="overflow-hidden border-t border-white/5 bg-base/80 backdrop-blur-md md:hidden"
+            className="overflow-hidden border-t-2 border-foreground bg-base/95 backdrop-blur-md md:hidden"
           >
-            <div className="container flex flex-col gap-1 py-4">
+            <div className="container flex flex-col divide-hairline py-2">
               {siteConfig.navLinks.map((link) => {
                 const active = pathname === link.href || pathname.startsWith(link.href + '/')
                 return (
@@ -115,11 +111,12 @@ export function Nav() {
                     href={link.href}
                     aria-current={active ? 'page' : undefined}
                     className={cn(
-                      'rounded-md px-3 py-2 text-sm transition hover:bg-white/5 hover:text-foreground',
-                      active ? 'text-foreground bg-white/[0.04]' : 'text-muted-foreground',
+                      'flex items-center justify-between py-3 text-sm transition',
+                      active ? 'text-foreground' : 'text-muted-foreground hover:text-foreground',
                     )}
                   >
                     {link.label}
+                    {active && <span aria-hidden="true" className="h-1 w-1 rounded-full bg-accent" />}
                   </Link>
                 )
               })}

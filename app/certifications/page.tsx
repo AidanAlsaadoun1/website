@@ -29,9 +29,9 @@ export default function CertificationsPage() {
       <Reveal>
         <SectionHeading
           level={1}
-          eyebrow="certifications"
-          title="Paper trail"
-          description="Certifications, programmes, and credentials I've earned. All verifiable on the issuer's platform."
+          eyebrow="Certifications"
+          title="The paper trail"
+          description="Cloud certifications, mentorship programmes and credentials I've earned, all verifiable on the issuer's platform."
         />
       </Reveal>
 
@@ -61,7 +61,7 @@ export default function CertificationsPage() {
                   <div className="flex flex-col gap-1">
                     <h2
                       id={`cert-${slugForA11y(cert)}`}
-                      className="text-balance text-lg font-semibold leading-snug"
+                      className="display text-balance text-xl leading-snug"
                     >
                       {cert.name}
                     </h2>
@@ -82,7 +82,7 @@ export default function CertificationsPage() {
                       {cert.skills.map((skill) => (
                         <li
                           key={skill}
-                          className="rounded-full border border-white/15 bg-white/[0.04] px-2.5 py-0.5 font-mono text-[10px] uppercase tracking-wider text-muted-foreground"
+                          className="rounded-full border border-foreground/15 px-2.5 py-0.5 font-mono text-[10px] uppercase tracking-wider text-muted-foreground"
                         >
                           {skill}
                         </li>
@@ -90,7 +90,7 @@ export default function CertificationsPage() {
                     </ul>
                   )}
 
-                  <div className="mt-auto flex flex-col gap-3 border-t border-white/[0.06] pt-4">
+                  <div className="mt-auto flex flex-col gap-3 border-t border-foreground/10 pt-4">
                     <dl className="grid grid-cols-2 gap-y-1 font-mono text-[11px] text-muted-foreground">
                       <dt className="sr-only">Issued</dt>
                       <dd>
@@ -137,7 +137,7 @@ export default function CertificationsPage() {
                         href={cert.credentialUrl}
                         target="_blank"
                         rel="noreferrer noopener"
-                        className="inline-flex w-fit items-center gap-1.5 rounded-full border border-white/25 bg-white/5 px-3 py-1 font-mono text-xs text-foreground transition hover:border-white/50 hover:bg-white/10"
+                        className="inline-flex w-fit items-center gap-1.5 rounded-full border border-foreground/25 px-3 py-1 font-mono text-xs text-foreground transition hover:border-foreground/50 hover:bg-foreground/[0.04]"
                         aria-label={`Verify ${cert.name} (opens in new tab)`}
                       >
                         Verify
@@ -160,7 +160,7 @@ function CertBadge({ cert }: { cert: Certification }) {
     return (
       <div className="relative flex h-28 items-center justify-center">
         <div
-          className="absolute inset-0 -z-10 rounded-2xl bg-white/[0.04] blur-xl"
+          className="absolute inset-0 -z-10 rounded-2xl bg-foreground/[0.03] blur-xl"
           aria-hidden="true"
         />
         <Image
@@ -174,14 +174,14 @@ function CertBadge({ cert }: { cert: Certification }) {
       </div>
     )
   }
-  // Typographic fallback — monogram tile based on the cert's acronym
+  // Typographic fallback, monogram tile based on the cert's acronym
   const acronym = getAcronym(cert.name)
   return (
     <div
       aria-hidden="true"
-      className="relative flex h-28 w-28 items-center justify-center self-start overflow-hidden rounded-2xl border border-white/15 bg-gradient-to-br from-white/[0.08] to-white/[0.02]"
+      className="relative flex h-28 w-28 items-center justify-center self-start overflow-hidden rounded-2xl border border-foreground/15 bg-gradient-to-br from-foreground/[0.05] to-foreground/[0.01]"
     >
-      <div className="absolute inset-0 bg-[radial-gradient(120%_80%_at_50%_0%,rgba(199,228,255,0.12),transparent_60%)]" />
+      <div className="absolute inset-0 bg-[radial-gradient(120%_80%_at_50%_0%,rgba(155,74,32,0.07),transparent_60%)]" />
       <div className="relative flex flex-col items-center gap-1">
         <ShieldCheck className="h-5 w-5 text-accent" aria-hidden="true" />
         <span className="font-mono text-base font-bold tracking-[0.18em] text-foreground">

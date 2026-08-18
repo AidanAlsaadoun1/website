@@ -5,18 +5,17 @@ import { cn } from '@/lib/utils'
 type Variant = 'solid' | 'glass'
 
 const base =
-  'inline-flex items-center gap-2 rounded-full px-5 py-2.5 text-sm font-medium transition-all duration-300 will-change-transform'
+  'inline-flex items-center gap-2 rounded-full border-2 border-foreground px-6 py-3 text-sm font-semibold transition-all duration-200 ease-out'
 
 // WCAG AA notes:
-// - solid: text-base (#08090c) on bg-foreground (#f5f5f7) → 17.6:1 ✓
-// - glass: text-foreground (#f5f5f7) on near-base bg → 16:1 ✓
-// - border-white/25 → ~3.1:1 against the page bg, meeting 1.4.11 Non-text Contrast for the
-//   button's outer boundary so the interactive control is identifiable without relying on hover.
+// - solid: cream text (#faf7f0) on ink (#1c1a17) → ~15:1 ✓
+// - glass: ink text on white → ~16:1 ✓
+// - both variants carry a 2px ink border → 1.4.11 Non-text Contrast easily met.
 const variants: Record<Variant, string> = {
   solid:
-    'bg-foreground text-base shadow-[0_8px_24px_-12px_rgba(255,255,255,0.4)] hover:bg-white hover:shadow-[0_12px_36px_-12px_rgba(255,255,255,0.55)]',
+    'bg-foreground text-base shadow-[4px_4px_0_0_rgb(var(--accent))] hover:-translate-x-0.5 hover:-translate-y-0.5 hover:shadow-[7px_7px_0_0_rgb(var(--accent))] active:translate-x-0 active:translate-y-0 active:shadow-[2px_2px_0_0_rgb(var(--accent))]',
   glass:
-    'glass border-white/25 text-foreground hover:bg-white/[0.07] hover:border-white/40',
+    'glass text-foreground hover:-translate-x-0.5 hover:-translate-y-0.5 hover:shadow-[7px_7px_0_0_rgb(var(--foreground))] active:translate-x-0 active:translate-y-0 active:shadow-[2px_2px_0_0_rgb(var(--foreground))]',
 }
 
 type AnchorProps = Omit<ComponentPropsWithoutRef<'a'>, 'href'> & {

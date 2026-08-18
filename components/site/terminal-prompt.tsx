@@ -13,7 +13,7 @@ type Props = {
 }
 
 /**
- * Tiny typewriter — used for the `$ whoami` flourish under the hero.
+ * Tiny typewriter, used for the `$ whoami` flourish under the hero.
  * Honors `prefers-reduced-motion`: instant render with no animation.
  */
 export function TerminalPrompt({ lines, speed = 28, linePause = 280, className }: Props) {
@@ -60,7 +60,7 @@ export function TerminalPrompt({ lines, speed = 28, linePause = 280, className }
 
   return (
     <>
-      {/* Screen-reader equivalent — clean, static, announced once. */}
+      {/* Screen-reader equivalent, clean, static, announced once. */}
       <p className="sr-only">{lines.join('. ')}</p>
 
       <pre

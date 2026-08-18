@@ -16,15 +16,33 @@ const config: Config = {
         accent: {
           DEFAULT: 'rgb(var(--accent) / <alpha-value>)',
           foreground: 'rgb(var(--accent-foreground) / <alpha-value>)',
+          soft: 'rgb(var(--accent-soft) / <alpha-value>)',
         },
         foreground: 'rgb(var(--foreground) / <alpha-value>)',
         muted: 'rgb(var(--muted) / <alpha-value>)',
         'muted-foreground': 'rgb(var(--muted-foreground) / <alpha-value>)',
         border: 'rgb(var(--border) / <alpha-value>)',
+        pop: {
+          butter: '#ffe9a3',
+          sky: '#d6e4ff',
+          blush: '#ffd9e8',
+          mint: '#d3f2df',
+          sun: '#f5b301',
+          cobalt: '#2f5cf5',
+          rose: '#e5488a',
+          leaf: '#2f9e5f',
+        },
       },
       fontFamily: {
         sans: ['var(--font-sans)', 'system-ui', 'sans-serif'],
         mono: ['var(--font-mono)', 'ui-monospace', 'monospace'],
+        display: ['var(--font-display)', 'ui-serif', 'Georgia', 'serif'],
+      },
+      fontSize: {
+        // Editorial display sizes, used by the hero and page titles
+        'display-sm': ['2.75rem', { lineHeight: '1.05', letterSpacing: '-0.015em' }],
+        'display-md': ['3.75rem', { lineHeight: '1.02', letterSpacing: '-0.02em' }],
+        'display-lg': ['5rem', { lineHeight: '0.98', letterSpacing: '-0.025em' }],
       },
       keyframes: {
         'cursor-blink': {
@@ -43,12 +61,17 @@ const config: Config = {
           '0%, 100%': { transform: 'translate3d(0,0,0)' },
           '50%': { transform: 'translate3d(-30px,40px,0)' },
         },
+        marquee: {
+          from: { transform: 'translateX(0)' },
+          to: { transform: 'translateX(-50%)' },
+        },
       },
       animation: {
         'cursor-blink': 'cursor-blink 1s step-end infinite',
         'bob': 'bob 3.2s ease-in-out infinite',
         'float-1': 'float-1 22s ease-in-out infinite',
         'float-2': 'float-2 28s ease-in-out infinite',
+        marquee: 'marquee 30s linear infinite',
       },
       typography: ({ theme }: { theme: (path: string) => string }) => ({
         DEFAULT: {
@@ -64,8 +87,8 @@ const config: Config = {
             '--tw-prose-quotes': theme('colors.foreground'),
             '--tw-prose-quote-borders': theme('colors.accent.DEFAULT'),
             '--tw-prose-code': theme('colors.accent.DEFAULT'),
-            '--tw-prose-pre-code': theme('colors.foreground'),
-            '--tw-prose-pre-bg': 'rgb(0 0 0 / 0.35)',
+            '--tw-prose-pre-code': '#f0eee9',
+            '--tw-prose-pre-bg': '#211f1b',
             maxWidth: '70ch',
             a: { textUnderlineOffset: '3px' },
             'code::before': { content: '""' },
@@ -73,7 +96,7 @@ const config: Config = {
             code: {
               padding: '0.15rem 0.35rem',
               borderRadius: '0.35rem',
-              backgroundColor: 'rgb(255 255 255 / 0.06)',
+              backgroundColor: 'rgb(30 28 25 / 0.06)',
               fontWeight: '500',
             },
           },

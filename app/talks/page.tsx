@@ -32,7 +32,6 @@ export default function TalksPage() {
         <EmptyState
           title="No talks logged yet"
           description="When I give one, it'll show up here. In the meantime, want me on a podcast or at a meetup? Hit the contact page."
-          hint="config/site.ts → talks: [...]"
         />
       ) : (
         <ul className="space-y-4">

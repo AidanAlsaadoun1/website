@@ -8,9 +8,9 @@ export default function NotFound() {
         <p aria-hidden="true">
           <span className="tag-sticker bg-pop-blush">Error 404</span>
         </p>
-        <h1 className="display mt-6 text-display-sm">This page ghosted us.</h1>
+        <h1 className="display mt-6 text-display-sm">404, nothing at this address.</h1>
         <p className="pretty-wrap mt-4 leading-relaxed text-muted-foreground">
-          Either it never existed or it moved without leaving a note. Rude.
+          Either it never existed or it moved without a redirect. The work and writing are one click away.
         </p>
         <div className="mt-6 inline-block">
           <PillLink href="/" variant="solid">

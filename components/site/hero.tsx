@@ -1,145 +1,86 @@
-'use client'
+import Link from 'next/link'
+import { ArrowRight, Download, Github, Linkedin } from 'lucide-react'
+import { AtAGlance } from './at-a-glance'
+import { PillLink, pillClassName } from '@/components/ui/pill-button'
+import { githubUrl, siteConfig } from '@/config/site'
 
-import { motion, useReducedMotion } from 'framer-motion'
-import { ArrowRight, Github, Linkedin } from 'lucide-react'
-import { siteConfig } from '@/config/site'
-import { Magnetic } from './magnetic'
-import { PixelAvatar } from './pixel-avatar'
-import { PillLink } from '@/components/ui/pill-button'
+/** Staggered CSS entrance; collapses to instant under prefers-reduced-motion. */
+const rise = (ms: number) => ({ style: { animationDelay: `${ms}ms` } })
 
-const easeOut = [0.22, 1, 0.36, 1] as const
-
-/** Hand-drawn squiggle that draws itself under the accent phrase. */
-function Squiggle() {
-  const prefersReduced = useReducedMotion()
-  return (
-    <svg
-      aria-hidden="true"
-      viewBox="0 0 220 14"
-      preserveAspectRatio="none"
-      className="absolute -bottom-2 left-0 h-3 w-full"
-    >
-      <motion.path
-        d="M3 9 Q 20 2, 38 8 T 74 8 T 110 8 T 146 8 T 182 8 T 217 7"
-        fill="none"
-        stroke="rgb(var(--accent))"
-        strokeWidth="5"
-        strokeLinecap="round"
-        initial={prefersReduced ? { pathLength: 1 } : { pathLength: 0 }}
-        animate={{ pathLength: 1 }}
-        transition={{ duration: 0.9, delay: 0.7, ease: 'easeInOut' }}
-      />
-    </svg>
-  )
-}
-
+/**
+ * The landing hero. A Server Component: the only motion is a CSS entrance,
+ * so no client bundle is paid for the first thing a recruiter sees.
+ */
 export function Hero() {
-  const prefersReduced = useReducedMotion()
-
-  const rise = (delay: number) =>
-    prefersReduced
-      ? { initial: { opacity: 0 }, animate: { opacity: 1 }, transition: { delay: 0 } }
-      : {
-          initial: { opacity: 0, y: 16 },
-          animate: { opacity: 1, y: 0 },
-          transition: { duration: 0.7, ease: easeOut, delay },
-        }
-
+  const { headline, cv } = siteConfig
   return (
-    <section className="container relative pb-20 pt-14 sm:pt-20">
-      <div className="grid items-center gap-16 lg:grid-cols-[1.5fr_1fr]">
+    <section aria-labelledby="hero-heading" className="container relative pb-16 pt-10 sm:pt-14 lg:pb-24 lg:pt-16">
+      <div className="grid items-start gap-12 lg:grid-cols-[minmax(0,1.3fr)_minmax(0,1fr)] lg:gap-16">
         <div>
-          <motion.p {...rise(0)} className="tag-sticker bg-pop-mint">
-            {siteConfig.role} @ {siteConfig.company.name}
-          </motion.p>
+          <p className="animate-rise font-mono text-[11px] uppercase tracking-[0.16em] text-muted-foreground" {...rise(0)}>
+            {siteConfig.role} @{' '}
+            <a
+              href={siteConfig.company.url}
+              target="_blank"
+              rel="noreferrer noopener"
+              className="text-foreground underline decoration-foreground/30 underline-offset-4 hover:decoration-accent"
+            >
+              {siteConfig.company.name}
+            </a>{' '}
+            · {siteConfig.location}
+          </p>
 
-          <motion.h1
-            {...rise(0.08)}
-            className="display mt-8 text-balance text-[3.4rem] leading-[1.02] sm:text-7xl lg:text-[5.2rem]"
-          >
-            Hi, I&apos;m Aidan.
-            <br />I build{' '}
-            <span className="accent-text relative inline-block whitespace-nowrap">
-              the whole thing
-              <Squiggle />
+          <h1 id="hero-heading" className="animate-rise mt-6" {...rise(80)}>
+            <span className="block text-base font-semibold tracking-tight text-foreground sm:text-lg">
+              {siteConfig.fullName}
             </span>
-            .
-          </motion.h1>
+            <span className="display mt-3 block text-balance text-[2.6rem] leading-[1.02] sm:text-6xl lg:text-[4.4rem]">
+              {headline.lead} <span className="accent-text">{headline.accent}</span>
+            </span>
+          </h1>
 
-          <motion.p
-            {...rise(0.18)}
-            className="pretty-wrap mt-8 max-w-md text-lg leading-relaxed text-muted-foreground"
+          <p
+            className="pretty-wrap animate-rise mt-7 max-w-xl text-lg leading-relaxed text-muted-foreground"
+            {...rise(160)}
           >
             {siteConfig.blurb}
-          </motion.p>
+          </p>
 
-          <motion.div {...rise(0.28)} className="mt-10 flex flex-wrap items-center gap-4">
-            <Magnetic>
-              <PillLink href="/projects" variant="solid">
-                See the work
-                <ArrowRight className="h-4 w-4" aria-hidden="true" />
-              </PillLink>
-            </Magnetic>
-            <Magnetic>
-              <PillLink href="/blog" variant="glass">
-                Read the blog
-              </PillLink>
-            </Magnetic>
-            <div className="ml-1 flex items-center gap-1">
-              <Magnetic strength={0.35}>
-                <a
-                  href={`https://github.com/${siteConfig.socials.github}`}
-                  target="_blank"
-                  rel="noreferrer noopener"
-                  aria-label="GitHub"
-                  className="rounded-full p-2 text-foreground/70 transition hover:-rotate-6 hover:text-accent"
-                >
-                  <Github className="h-6 w-6" />
-                </a>
-              </Magnetic>
-              <Magnetic strength={0.35}>
-                <a
-                  href={siteConfig.socials.linkedin}
-                  target="_blank"
-                  rel="noreferrer noopener"
-                  aria-label="LinkedIn"
-                  className="rounded-full p-2 text-foreground/70 transition hover:rotate-6 hover:text-accent"
-                >
-                  <Linkedin className="h-6 w-6" />
-                </a>
-              </Magnetic>
-            </div>
-          </motion.div>
+          <div className="animate-rise mt-9 flex flex-wrap items-center gap-3" {...rise(260)}>
+            <PillLink href="/projects" variant="solid">
+              View work
+              <ArrowRight className="h-4 w-4" aria-hidden="true" />
+            </PillLink>
+            {cv.url && (
+              <a href={cv.url} download className={pillClassName('glass')}>
+                <Download className="h-4 w-4" aria-hidden="true" />
+                {cv.label}
+              </a>
+            )}
+            <PillLink href={siteConfig.socials.linkedin} variant="glass">
+              <Linkedin className="h-4 w-4" aria-hidden="true" />
+              LinkedIn
+            </PillLink>
+            <PillLink href={githubUrl} variant="glass">
+              <Github className="h-4 w-4" aria-hidden="true" />
+              GitHub
+            </PillLink>
+            <Link href="/contact" className="link ml-1 text-sm">
+              Contact me
+            </Link>
+          </div>
+
+          <p
+            className="animate-rise mt-9 font-mono text-[11px] uppercase tracking-[0.16em] text-muted-foreground"
+            {...rise(320)}
+          >
+            {siteConfig.heroStack.join(' · ')}
+          </p>
         </div>
 
-        {/* Avatar sticker, slightly askew, straightens when you hover */}
-        <motion.div
-          {...rise(0.15)}
-          className="relative mx-auto w-fit lg:mx-0 lg:justify-self-end"
-        >
-          <div className="pop-card pop-card-hover group rotate-2 rounded-3xl p-7 transition-transform duration-300 hover:rotate-0">
-            {/* tape strips */}
-            <span
-              aria-hidden="true"
-              className="absolute -top-3 left-8 h-6 w-16 -rotate-6 rounded-sm bg-pop-butter/90 shadow-sm"
-            />
-            <span
-              aria-hidden="true"
-              className="absolute -top-3 right-8 h-6 w-16 rotate-6 rounded-sm bg-pop-sky/90 shadow-sm"
-            />
-            <PixelAvatar size={210} animate={false} />
-            <p className="mt-4 text-center font-mono text-xs text-muted-foreground">
-              me, in 16×16 pixels
-            </p>
-          </div>
-          <p className="mt-5 flex items-center justify-center gap-2 text-sm text-muted-foreground lg:justify-end">
-            <span className="relative flex h-2.5 w-2.5" aria-hidden="true">
-              <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-pop-leaf/60" />
-              <span className="relative inline-flex h-2.5 w-2.5 rounded-full bg-pop-leaf" />
-            </span>
-            {siteConfig.availability}
-          </p>
-        </motion.div>
+        <div className="animate-rise lg:pt-2" {...rise(220)}>
+          <AtAGlance />
+        </div>
       </div>
     </section>
   )

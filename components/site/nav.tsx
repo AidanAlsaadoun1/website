@@ -4,9 +4,16 @@ import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { useEffect, useState } from 'react'
 import { AnimatePresence, motion } from 'framer-motion'
-import { Menu, X } from 'lucide-react'
-import { siteConfig } from '@/config/site'
+import { Download, Github, Linkedin, Menu, X } from 'lucide-react'
+import { pillClassName } from '@/components/ui/pill-button'
+import { githubUrl, siteConfig } from '@/config/site'
 import { cn } from '@/lib/utils'
+
+/** Hash links ("/#about") are never "active"; path links match themselves and children. */
+function isActive(pathname: string, href: string) {
+  if (href.includes('#')) return false
+  return pathname === href || pathname.startsWith(href + '/')
+}
 
 export function Nav() {
   const pathname = usePathname()
@@ -24,14 +31,16 @@ export function Nav() {
     setOpen(false)
   }, [pathname])
 
+  const { cv } = siteConfig
+
   return (
     <header
       className={cn(
         'sticky top-0 z-40 transition-all duration-300',
-        scrolled ? 'glass-bar' : 'bg-transparent',
+        scrolled || open ? 'glass-bar' : 'bg-transparent',
       )}
     >
-      <div className="container flex h-20 items-center justify-between gap-6">
+      <div className="container flex h-16 items-center justify-between gap-6 sm:h-[4.5rem]">
         <Link
           href="/"
           className="group flex items-center gap-2.5"
@@ -46,9 +55,9 @@ export function Nav() {
           </span>
         </Link>
 
-        <nav aria-label="Primary" className="relative hidden items-center gap-8 md:flex">
+        <nav aria-label="Primary" className="relative hidden items-center gap-7 md:flex">
           {siteConfig.navLinks.map((link) => {
-            const active = pathname === link.href || pathname.startsWith(link.href + '/')
+            const active = isActive(pathname, link.href)
             return (
               <Link
                 key={link.href}
@@ -76,6 +85,12 @@ export function Nav() {
               </Link>
             )
           })}
+          {cv.url && (
+            <a href={cv.url} download className={pillClassName('solid', 'sm', 'ml-1')}>
+              <Download className="h-3.5 w-3.5" aria-hidden="true" />
+              {cv.label}
+            </a>
+          )}
         </nav>
 
         <button
@@ -104,22 +119,47 @@ export function Nav() {
           >
             <div className="container flex flex-col divide-hairline py-2">
               {siteConfig.navLinks.map((link) => {
-                const active = pathname === link.href || pathname.startsWith(link.href + '/')
+                const active = isActive(pathname, link.href)
                 return (
                   <Link
                     key={link.href}
                     href={link.href}
                     aria-current={active ? 'page' : undefined}
+                    onClick={() => setOpen(false)}
                     className={cn(
-                      'flex items-center justify-between py-3 text-sm transition',
+                      'flex items-center justify-between py-3 text-base transition',
                       active ? 'text-foreground' : 'text-muted-foreground hover:text-foreground',
                     )}
                   >
                     {link.label}
-                    {active && <span aria-hidden="true" className="h-1 w-1 rounded-full bg-accent" />}
+                    {active && <span aria-hidden="true" className="h-1.5 w-1.5 rounded-full bg-accent" />}
                   </Link>
                 )
               })}
+              <div className="flex flex-wrap items-center gap-3 py-4">
+                {cv.url && (
+                  <a href={cv.url} download className={pillClassName('solid', 'sm')}>
+                    <Download className="h-3.5 w-3.5" aria-hidden="true" />
+                    {cv.label}
+                  </a>
+                )}
+                <a
+                  href={githubUrl}
+                  target="_blank"
+                  rel="noreferrer noopener"
+                  className={pillClassName('glass', 'sm')}
+                >
+                  <Github className="h-3.5 w-3.5" aria-hidden="true" /> GitHub
+                </a>
+                <a
+                  href={siteConfig.socials.linkedin}
+                  target="_blank"
+                  rel="noreferrer noopener"
+                  className={pillClassName('glass', 'sm')}
+                >
+                  <Linkedin className="h-3.5 w-3.5" aria-hidden="true" /> LinkedIn
+                </a>
+              </div>
             </div>
           </motion.nav>
         )}

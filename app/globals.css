@@ -109,11 +109,32 @@
     @apply font-mono text-[11px] uppercase tracking-[0.18em] text-muted-foreground;
   }
 
-  /* Little rotated label tag, the zine sticker */
+  /* Little label tag, the zine sticker. A one-degree tilt is all the
+     personality it needs; the cards it sits on are straight. */
   .tag-sticker {
     @apply inline-block rounded-md border-2 border-foreground px-2.5 py-1 font-mono text-[11px] uppercase tracking-[0.14em] text-foreground;
-    transform: rotate(-1.5deg);
+    transform: rotate(-1deg);
     box-shadow: 2px 2px 0 0 rgb(var(--foreground));
+  }
+
+  /* Small mono chip for stack / concept lists */
+  .chip {
+    @apply inline-flex items-center rounded-full border border-foreground/20 bg-elevated px-2.5 py-0.5 font-mono text-[11px] tracking-wide text-foreground/80;
+  }
+  .chip-strong {
+    @apply inline-flex items-center rounded-full border-2 border-foreground bg-elevated px-2.5 py-0.5 font-mono text-[10px] uppercase tracking-wider text-foreground;
+  }
+
+  /* Static terminal block (no typewriter), dark island to match code blocks */
+  .terminal {
+    @apply overflow-x-auto rounded-xl border-2 border-foreground bg-[#211f1b] p-5 font-mono text-[13px] leading-relaxed text-[#f5f2ea];
+    box-shadow: 4px 4px 0 0 rgb(var(--foreground));
+  }
+  .terminal .prompt {
+    color: rgb(var(--accent-soft));
+  }
+  .terminal .muted {
+    color: #b7b2a7;
   }
 
   /* Accented word inside a display heading */
@@ -134,14 +155,6 @@
   }
   .link:hover {
     @apply text-accent;
-  }
-
-  .terminal-cursor::after {
-    content: '▍';
-    display: inline-block;
-    margin-left: 2px;
-    color: rgb(var(--accent));
-    animation: cursor-blink 1s step-end infinite;
   }
 
   /* shiki code blocks, dark islands, with a sticker border to match */
@@ -184,6 +197,10 @@
   }
   .divide-hairline > * + * {
     border-top: 1px solid rgb(var(--foreground) / 0.12);
+  }
+  /* Home-page sections are hash targets; keep them clear of the sticky header. */
+  .anchor-target {
+    scroll-margin-top: 6rem;
   }
 }
 

@@ -9,8 +9,8 @@ const preview: Preview = {
     backgrounds: {
       default: 'dev-aidan',
       values: [
-        { name: 'dev-aidan', value: '#08090c' },
-        { name: 'paper', value: '#f5f5f7' },
+        { name: 'dev-aidan', value: '#faf7f0' },
+        { name: 'white', value: '#ffffff' },
       ],
     },
     layout: 'centered',
@@ -29,7 +29,7 @@ const preview: Preview = {
     (Story, context) => {
       const withAurora = context.parameters.withAurora ?? false
       return (
-        <div className={`${GeistSans.variable} ${GeistMono.variable} dark`}>
+        <div className={`${GeistSans.variable} ${GeistMono.variable}`}>
           <div className="relative min-h-[40vh] bg-base font-sans text-foreground">
             {withAurora && <AuroraBackground />}
             <div className="relative z-10 p-8">

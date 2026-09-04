@@ -6,13 +6,13 @@ import { GlassCard } from '@/components/site/glass-card'
 import { SectionHeading } from '@/components/site/section-heading'
 import { EmptyState } from '@/components/site/empty-state'
 import { Reveal, RevealGroup } from '@/components/site/reveal'
-import { Tilt } from '@/components/site/tilt'
 import { siteConfig, type Certification } from '@/config/site'
 import { formatMonthYear } from '@/lib/utils'
 
 export const metadata: Metadata = {
   title: 'Certifications',
-  description: 'Certifications and verifiable credentials.',
+  description: 'AWS Solutions Architect and Developer Associate, PJPT (TCM Security) and mentorship credentials, all verifiable on the issuer’s platform.',
+  alternates: { canonical: '/certifications' },
 }
 
 export default function CertificationsPage() {
@@ -30,8 +30,8 @@ export default function CertificationsPage() {
         <SectionHeading
           level={1}
           eyebrow="Certifications"
-          title="The paper trail"
-          description="Cloud certifications, mentorship programmes and credentials I've earned, all verifiable on the issuer's platform."
+          title="Verifiable credentials."
+          description="Cloud certifications, a penetration-testing credential and a mentorship programme, all verifiable on the issuer's platform."
         />
       </Reveal>
 
@@ -49,7 +49,7 @@ export default function CertificationsPage() {
         >
           {certs.map((cert) => (
             <Reveal key={`${cert.name}-${cert.issuedAt}`} as="li">
-              <Tilt className="group relative h-full" maxTilt={4}>
+              <div className="group relative h-full">
                 <GlassCard
                   as="article"
                   interactive
@@ -146,7 +146,7 @@ export default function CertificationsPage() {
                     )}
                   </div>
                 </GlassCard>
-              </Tilt>
+              </div>
             </Reveal>
           ))}
         </RevealGroup>

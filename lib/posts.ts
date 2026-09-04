@@ -30,6 +30,8 @@ export type PostFrontmatter = {
   category?: PostCategory
   tags?: string[]
   draft?: boolean
+  /** Pinned to the home page "Writing" section (engineering-depth posts first). */
+  featured?: boolean
   // security-specific
   severity?: 'info' | 'low' | 'medium' | 'high' | 'critical'
   cve?: string
@@ -93,4 +95,15 @@ export async function getAllTags(kind: PostKind): Promise<string[]> {
   const set = new Set<string>()
   posts.forEach((p) => p.frontmatter.tags?.forEach((t) => set.add(t)))
   return [...set].sort()
+}
+
+/**
+ * Posts for the home page: `featured: true` posts first (newest first), then
+ * the newest of the rest, up to `limit`.
+ */
+export async function getHomePosts(limit = 3): Promise<Post[]> {
+  const posts = await getAllPosts('blog')
+  const featured = posts.filter((p) => p.frontmatter.featured)
+  const rest = posts.filter((p) => !p.frontmatter.featured)
+  return [...featured, ...rest].slice(0, limit)
 }

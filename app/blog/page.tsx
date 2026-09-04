@@ -12,9 +12,10 @@ import {
 } from '@/lib/posts'
 
 export const metadata: Metadata = {
-  title: 'Blog',
+  title: 'Writing',
   description:
-    'Notes on building software end to end: architecture, delivery, the occasional security writeup.',
+    'Notes on building software end to end: architecture, delivery, debugging, and the occasional security writeup.',
+  alternates: { canonical: '/blog' },
 }
 
 type SearchParams = Promise<{ category?: string }>
@@ -54,13 +55,14 @@ export default async function BlogIndex({ searchParams }: { searchParams: Search
       <Breadcrumbs
         items={[
           { href: '/', label: 'Home' },
-          { label: 'Blog' },
+          { label: 'Writing' },
         ]}
       />
       <SectionHeading
         level={1}
         eyebrow="Writing"
-        title="Notes from the build"
+        tone="butter"
+        title="Notes from the build."
         description="What I learned shipping things end to end: architecture calls, delivery habits, and the occasional security writeup. Updated whenever I have something worth saying."
       />
 
@@ -93,7 +95,7 @@ export default async function BlogIndex({ searchParams }: { searchParams: Search
           <ul className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3" aria-label="Blog posts">
             {filtered.map((p) => (
               <li key={p.slug}>
-                <PostCard post={p} />
+                <PostCard post={p} headingLevel={2} />
               </li>
             ))}
           </ul>

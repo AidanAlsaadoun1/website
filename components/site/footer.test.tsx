@@ -2,6 +2,7 @@ import { describe, it, expect } from 'vitest'
 import { render, screen, within } from '@testing-library/react'
 import { axe } from 'jest-axe'
 import { Footer } from './footer'
+import { siteConfig } from '@/config/site'
 
 describe('Footer', () => {
   it('renders as a contentinfo landmark', () => {
@@ -9,29 +10,42 @@ describe('Footer', () => {
     expect(screen.getByRole('contentinfo')).toBeInTheDocument()
   })
 
-  it('exposes a labelled social-links navigation', () => {
+  it('exposes labelled navigation for site links and social links', () => {
     render(<Footer />)
-    const nav = screen.getByRole('navigation', { name: /social/i })
-    expect(nav).toBeInTheDocument()
+    expect(screen.getByRole('navigation', { name: /footer/i })).toBeInTheDocument()
+    expect(screen.getByRole('navigation', { name: /social/i })).toBeInTheDocument()
   })
 
-  it('links to GitHub and LinkedIn with explicit external-link labels', () => {
+  it('links to GitHub and LinkedIn with explicit external-link attributes', () => {
     render(<Footer />)
     const nav = screen.getByRole('navigation', { name: /social/i })
-    expect(within(nav).getByRole('link', { name: /github/i })).toHaveAttribute(
-      'rel',
-      'noreferrer noopener',
-    )
-    expect(within(nav).getByRole('link', { name: /linkedin/i })).toHaveAttribute(
-      'target',
-      '_blank',
-    )
+    expect(within(nav).getByRole('link', { name: /github/i })).toHaveAttribute('rel', 'noreferrer noopener')
+    expect(within(nav).getByRole('link', { name: /linkedin/i })).toHaveAttribute('target', '_blank')
   })
 
-  it('does NOT expose a mail link (Aidan removed the inbox)', () => {
+  it('does not advertise job-seeking', () => {
     render(<Footer />)
-    expect(screen.queryByRole('link', { name: /email/i })).not.toBeInTheDocument()
-    expect(screen.queryByRole('link', { name: /mailto/i })).not.toBeInTheDocument()
+    expect(screen.queryByText(/open to/i)).not.toBeInTheDocument()
+  })
+
+  it('only exposes a mail link when an email is configured', () => {
+    render(<Footer />)
+    const mail = screen.queryByRole('link', { name: /^email$/i })
+    if (siteConfig.email) {
+      expect(mail).toHaveAttribute('href', `mailto:${siteConfig.email}`)
+    } else {
+      expect(mail).not.toBeInTheDocument()
+    }
+  })
+
+  it('only exposes a CV link when a CV is configured', () => {
+    render(<Footer />)
+    const cv = screen.queryByRole('link', { name: /download cv/i })
+    if (siteConfig.cv.url) {
+      expect(cv).toHaveAttribute('href', siteConfig.cv.url)
+    } else {
+      expect(cv).not.toBeInTheDocument()
+    }
   })
 
   it('has no axe violations', async () => {

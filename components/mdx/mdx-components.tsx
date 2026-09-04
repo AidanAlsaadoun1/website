@@ -7,6 +7,8 @@ import { cn } from '@/lib/utils'
  * Add custom ones here, they become "free imports" inside posts.
  */
 export const mdxComponents = {
+  /** Code blocks scroll horizontally; make the scroll region keyboard-reachable. */
+  pre: (props: ComponentProps<'pre'>) => <pre tabIndex={0} {...props} />,
   a: ({ href = '#', className, children, ...props }: ComponentProps<'a'>) => {
     const external = /^https?:\/\//.test(href)
     if (external) {

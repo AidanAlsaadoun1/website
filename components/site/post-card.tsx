@@ -1,19 +1,14 @@
 import Link from 'next/link'
 import { ArrowUpRight } from 'lucide-react'
 import type { Post } from '@/lib/posts'
-import { cn, formatDate } from '@/lib/utils'
+import { formatDate } from '@/lib/utils'
 
-/** Sticker card for writing, the serif title does the talking. */
-export function PostCard({ post, tilt = 0 }: { post: Post; tilt?: -1 | 0 | 1 }) {
+/** Card for writing, the serif title does the talking. */
+export function PostCard({ post, headingLevel = 3 }: { post: Post; headingLevel?: 2 | 3 }) {
   const href = `/${post.kind}/${post.slug}`
+  const Heading = headingLevel === 2 ? 'h2' : 'h3'
   return (
-    <article
-      className={cn(
-        'pop-card pop-card-hover group relative flex h-full flex-col gap-4 rounded-2xl p-7',
-        tilt === -1 && '-rotate-1 hover:rotate-0',
-        tilt === 1 && 'rotate-1 hover:rotate-0',
-      )}
-    >
+    <article className="pop-card pop-card-hover group relative flex h-full flex-col gap-4 rounded-2xl p-7">
       <div className="flex flex-wrap items-center gap-3 font-mono text-[11px] uppercase tracking-[0.14em] text-muted-foreground">
         <time dateTime={post.frontmatter.date}>{formatDate(post.frontmatter.date)}</time>
         <span aria-hidden="true">·</span>
@@ -26,11 +21,11 @@ export function PostCard({ post, tilt = 0 }: { post: Post; tilt?: -1 | 0 | 1 }) 
         )}
       </div>
 
-      <h3 className="display text-balance text-[1.7rem] leading-tight">
+      <Heading className="display text-balance text-[1.7rem] leading-tight">
         <Link href={href} className="after:absolute after:inset-0 group-hover:text-accent">
           {post.frontmatter.title}
         </Link>
-      </h3>
+      </Heading>
 
       <p className="pretty-wrap text-sm leading-relaxed text-muted-foreground">
         {post.frontmatter.summary}

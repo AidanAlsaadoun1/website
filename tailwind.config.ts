@@ -49,29 +49,20 @@ const config: Config = {
           '0%, 49%': { opacity: '1' },
           '50%, 100%': { opacity: '0' },
         },
-        'bob': {
+        bob: {
           '0%, 100%': { transform: 'translateY(0)' },
-          '50%, ': { transform: 'translateY(-6px)' },
+          '50%': { transform: 'translateY(-6px)' },
         },
-        'float-1': {
-          '0%, 100%': { transform: 'translate3d(0,0,0)' },
-          '50%': { transform: 'translate3d(40px,-30px,0)' },
-        },
-        'float-2': {
-          '0%, 100%': { transform: 'translate3d(0,0,0)' },
-          '50%': { transform: 'translate3d(-30px,40px,0)' },
-        },
-        marquee: {
-          from: { transform: 'translateX(0)' },
-          to: { transform: 'translateX(-50%)' },
+        // Hero entrance: pure CSS so the hero can stay a Server Component.
+        rise: {
+          from: { opacity: '0', transform: 'translateY(12px)' },
+          to: { opacity: '1', transform: 'translateY(0)' },
         },
       },
       animation: {
         'cursor-blink': 'cursor-blink 1s step-end infinite',
-        'bob': 'bob 3.2s ease-in-out infinite',
-        'float-1': 'float-1 22s ease-in-out infinite',
-        'float-2': 'float-2 28s ease-in-out infinite',
-        marquee: 'marquee 30s linear infinite',
+        bob: 'bob 3.2s ease-in-out infinite',
+        rise: 'rise 0.6s cubic-bezier(0.22, 1, 0.36, 1) both',
       },
       typography: ({ theme }: { theme: (path: string) => string }) => ({
         DEFAULT: {

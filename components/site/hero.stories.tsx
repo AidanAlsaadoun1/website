@@ -10,7 +10,7 @@ const meta: Meta<typeof Hero> = {
     docs: {
       description: {
         component:
-          'The landing hero — word-by-word reveal of the H1, magnetic CTAs, pixel avatar with idle bob, and the $ whoami terminal flourish. Honors prefers-reduced-motion.',
+          'The landing hero: name, role, one-paragraph positioning, recruiter CTAs and the at-a-glance panel. Server Component with a CSS-only entrance; honours prefers-reduced-motion.',
       },
     },
   },

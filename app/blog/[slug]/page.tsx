@@ -21,6 +21,7 @@ export async function generateMetadata({
   return {
     title: post.frontmatter.title,
     description: post.frontmatter.summary,
+    alternates: { canonical: `/blog/${post.slug}` },
     openGraph: {
       title: post.frontmatter.title,
       description: post.frontmatter.summary,
@@ -48,7 +49,7 @@ export default async function BlogPostPage({
       <Breadcrumbs
         items={[
           { href: '/', label: 'Home' },
-          { href: '/blog', label: 'Blog' },
+          { href: '/blog', label: 'Writing' },
           { label: post.frontmatter.title },
         ]}
       />

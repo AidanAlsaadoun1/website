@@ -27,6 +27,7 @@ export const metadata: Metadata = {
     title: siteConfig.seo.title,
     description: siteConfig.seo.description,
     siteName: siteConfig.fullName,
+    locale: 'en_GB',
   },
   twitter: {
     card: 'summary_large_image',
@@ -38,10 +39,7 @@ export const metadata: Metadata = {
     follow: true,
   },
   icons: {
-    icon: [
-      { url: '/favicon.svg', type: 'image/svg+xml' },
-      { url: '/favicon.ico', sizes: 'any' },
-    ],
+    icon: [{ url: '/favicon.svg', type: 'image/svg+xml' }],
   },
 }
 
@@ -55,14 +53,14 @@ export const viewport: Viewport = {
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html
-      lang="en"
+      lang="en-GB"
       className={cn(GeistSans.variable, GeistMono.variable)}
       suppressHydrationWarning
     >
       <body className="relative overflow-x-hidden">
         <a
           href="#main"
-          className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-50 focus:rounded-md focus:bg-elevated focus:px-3 focus:py-2 focus:text-sm"
+          className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-50 focus:rounded-md focus:border-2 focus:border-foreground focus:bg-elevated focus:px-3 focus:py-2 focus:text-sm"
         >
           Skip to content
         </a>

@@ -1,8 +1,7 @@
 import { ImageResponse } from 'next/og'
 import { siteConfig } from '@/config/site'
 
-export const runtime = 'edge'
-export const alt = 'Aidan Alsaadoun · Full-Stack Engineer'
+export const alt = `${siteConfig.fullName} · ${siteConfig.title}`
 export const size = { width: 1200, height: 630 }
 export const contentType = 'image/png'
 
@@ -17,8 +16,9 @@ export default async function OpengraphImage() {
           flexDirection: 'column',
           justifyContent: 'space-between',
           padding: 72,
-          background:
-            'radial-gradient(60% 80% at 15% 0%, rgba(255,233,163,0.8), transparent 60%), radial-gradient(60% 80% at 90% 100%, rgba(214,228,255,0.8), transparent 60%), #faf7f0',
+          backgroundColor: '#faf7f0',
+          backgroundImage:
+            'radial-gradient(60% 80% at 15% 0%, rgba(255,233,163,0.7), transparent 60%), radial-gradient(60% 80% at 90% 100%, rgba(214,228,255,0.7), transparent 60%)',
           color: '#1c1a17',
           fontFamily: 'serif',
         }}
@@ -43,14 +43,13 @@ export default async function OpengraphImage() {
           <span>{siteConfig.location}</span>
         </div>
 
-        <div style={{ display: 'flex', flexDirection: 'column', gap: 20 }}>
-          <div style={{ fontSize: 104, lineHeight: 1, letterSpacing: '-0.03em' }}>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 22 }}>
+          <div style={{ fontSize: 40, fontFamily: 'sans-serif', fontWeight: 600, letterSpacing: '-0.01em' }}>
             {siteConfig.fullName}
-            <span style={{ color: '#6e685e' }}>,</span>{' '}
-            <span style={{ color: '#c2410c', fontStyle: 'italic' }}>full-stack engineer</span>
           </div>
-          <div style={{ fontSize: 30, color: '#6e685e', fontFamily: 'sans-serif', maxWidth: 900 }}>
-            {siteConfig.positioning}
+          <div style={{ fontSize: 96, lineHeight: 1, letterSpacing: '-0.03em', display: 'flex', flexWrap: 'wrap' }}>
+            <span>{siteConfig.headline.lead}&nbsp;</span>
+            <span style={{ color: '#c2410c', fontStyle: 'italic' }}>{siteConfig.headline.accent}</span>
           </div>
         </div>
 
@@ -67,7 +66,7 @@ export default async function OpengraphImage() {
           }}
         >
           <span>dev-aidan.com</span>
-          <span>TypeScript · React · Node · AWS</span>
+          <span>{siteConfig.heroStack.join(' · ')}</span>
         </div>
       </div>
     ),

@@ -1,66 +1,192 @@
+import type { Metadata } from 'next'
 import Link from 'next/link'
-import { ArrowRight, Cloud, Database, Palette } from 'lucide-react'
+import {
+  ArrowRight,
+  ArrowUpRight,
+  Cloud,
+  Database,
+  Download,
+  Github,
+  GraduationCap,
+  Linkedin,
+  Mail,
+  Palette,
+  ShieldCheck,
+} from 'lucide-react'
 import { Hero } from '@/components/site/hero'
-import { Marquee } from '@/components/site/marquee'
 import { SectionHeading } from '@/components/site/section-heading'
 import { ProjectCard } from '@/components/site/project-card'
 import { PostCard } from '@/components/site/post-card'
+import { ExperienceTimeline } from '@/components/site/experience'
+import { TerminalBlock } from '@/components/site/terminal-block'
+import { PixelAvatar } from '@/components/site/pixel-avatar'
 import { Reveal, RevealGroup } from '@/components/site/reveal'
-import { PillLink } from '@/components/ui/pill-button'
-import { siteConfig } from '@/config/site'
-import { getPinnedRepos } from '@/lib/github'
-import { getAllPosts } from '@/lib/posts'
-import { cn } from '@/lib/utils'
+import { PillLink, pillClassName } from '@/components/ui/pill-button'
+import { featuredProjects } from '@/config/projects'
+import { githubUrl, siteConfig, siteUrl } from '@/config/site'
+import { getRepoMetadata } from '@/lib/github'
+import { getHomePosts } from '@/lib/posts'
+import { formatMonthYear } from '@/lib/utils'
 
-const CAPABILITY_LOOKS = [
-  { bg: 'bg-pop-butter', rotate: '-rotate-1', Icon: Palette },
-  { bg: 'bg-pop-sky', rotate: 'rotate-1', Icon: Database },
-  { bg: 'bg-pop-blush', rotate: '-rotate-1', Icon: Cloud },
+export const metadata: Metadata = {
+  alternates: { canonical: '/' },
+}
+
+const CAPABILITY_ICONS = [
+  { bg: 'bg-pop-butter', Icon: Palette },
+  { bg: 'bg-pop-sky', Icon: Database },
+  { bg: 'bg-pop-blush', Icon: Cloud },
 ] as const
 
-const NOTE_LOOKS = [
-  { bg: 'bg-pop-butter', rotate: '-rotate-2' },
-  { bg: 'bg-pop-sky', rotate: 'rotate-1' },
-  { bg: 'bg-pop-mint', rotate: 'rotate-2' },
-  { bg: 'bg-pop-blush', rotate: '-rotate-1' },
-] as const
-
-const TILTS = [-1, 0, 1] as const
+function personJsonLd() {
+  const data = {
+    '@context': 'https://schema.org',
+    '@type': 'Person',
+    name: siteConfig.fullName,
+    jobTitle: siteConfig.title,
+    description: siteConfig.positioning,
+    url: siteUrl,
+    image: `${siteUrl}/opengraph-image`,
+    address: { '@type': 'PostalAddress', addressCountry: 'GB' },
+    worksFor: {
+      '@type': 'Organization',
+      name: siteConfig.company.name,
+      url: siteConfig.company.url,
+    },
+    sameAs: [githubUrl, siteConfig.socials.linkedin],
+    knowsAbout: [...siteConfig.heroStack, 'Software architecture', 'Threat modelling', 'Web security'],
+  }
+  // `<` can't appear literally inside a JSON-LD script
+  return JSON.stringify(data).replace(/</g, '\\u003c')
+}
 
 export default async function HomePage() {
-  const [repos, blogPosts] = await Promise.all([getPinnedRepos(), getAllPosts('blog')])
-  const featuredRepos = repos.slice(0, 3)
-  const latestPosts = blogPosts.slice(0, 3)
+  const [repos, posts] = await Promise.all([getRepoMetadata(), getHomePosts(3)])
+  const [lead, ...others] = featuredProjects
+  const { cv, email } = siteConfig
 
   return (
     <>
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: personJsonLd() }} />
+
       <Hero />
 
-      <Marquee />
-
-      {/* What I do, three tilted colour cards */}
-      <section className="container py-24 sm:py-28">
+      {/* Selected work */}
+      <section id="work" aria-labelledby="work-heading" className="anchor-target container py-20 sm:py-24">
         <Reveal>
           <SectionHeading
-            eyebrow="What I do"
-            tone="sky"
-            title="Three layers, one engineer"
+            id="work-heading"
+            eyebrow="Selected work"
+            tone="mint"
+            title="Things I've built, and why they were hard."
+            description="Case studies with the engineering decisions behind them. Language, stars and last push are live from GitHub."
+            action={
+              <Link href="/projects" className="link inline-flex items-center gap-1 text-sm">
+                All projects <ArrowRight className="h-4 w-4" aria-hidden="true" />
+              </Link>
+            }
           />
         </Reveal>
-        <RevealGroup className="grid gap-8 md:grid-cols-3">
+        <div className="grid grid-cols-1 gap-8">
+          {lead && (
+            <Reveal>
+              <ProjectCard project={lead} repo={repos[lead.slug.toLowerCase()]} variant="featured" />
+            </Reveal>
+          )}
+          <RevealGroup className="grid grid-cols-1 gap-8 md:grid-cols-2">
+            {others.map((project) => (
+              <Reveal key={project.slug}>
+                <ProjectCard project={project} repo={repos[project.slug.toLowerCase()]} />
+              </Reveal>
+            ))}
+          </RevealGroup>
+        </div>
+      </section>
+
+      {/* Experience */}
+      <section
+        id="experience"
+        aria-labelledby="experience-heading"
+        className="anchor-target container py-20 sm:py-24"
+      >
+        <Reveal>
+          <SectionHeading
+            id="experience-heading"
+            eyebrow="Experience"
+            tone="sky"
+            title="Seven years of production systems."
+            description="Real-money games at Tombola, national-scale services in the Civil Service, payments at Visa, and now the first engineer at sprintworks."
+          />
+        </Reveal>
+        <Reveal>
+          <ExperienceTimeline items={siteConfig.experience} />
+        </Reveal>
+
+        <Reveal>
+          <div className="mt-12 grid gap-6 lg:grid-cols-[11rem_minmax(0,1fr)] lg:gap-10">
+            <p className="eyebrow lg:pt-1">Education & credentials</p>
+            <div>
+              <ul className="grid gap-3 sm:grid-cols-2" aria-label="Education and certifications">
+                {siteConfig.education.map((edu) => (
+                  <li
+                    key={edu.qualification}
+                    className="flex items-start justify-between gap-4 rounded-xl border-2 border-foreground bg-elevated px-4 py-3"
+                  >
+                    <div>
+                      <p className="text-sm font-medium leading-snug">{edu.qualification}</p>
+                      <p className="mt-0.5 font-mono text-[11px] text-muted-foreground">
+                        {edu.institution} · {edu.year}
+                      </p>
+                    </div>
+                    <GraduationCap className="mt-0.5 h-4 w-4 shrink-0 text-accent" aria-hidden="true" />
+                  </li>
+                ))}
+                {siteConfig.certifications.map((cert) => (
+                  <li
+                    key={cert.name}
+                    className="flex items-start justify-between gap-4 rounded-xl border border-foreground/20 bg-elevated px-4 py-3"
+                  >
+                    <div>
+                      <p className="text-sm font-medium leading-snug">{cert.name}</p>
+                      <p className="mt-0.5 font-mono text-[11px] text-muted-foreground">
+                        {cert.issuer} · <time dateTime={cert.issuedAt}>{formatMonthYear(cert.issuedAt)}</time>
+                      </p>
+                    </div>
+                    {cert.credentialUrl && (
+                      <a
+                        href={cert.credentialUrl}
+                        target="_blank"
+                        rel="noreferrer noopener"
+                        className="mt-0.5 inline-flex shrink-0 items-center gap-1 font-mono text-xs text-foreground/80 hover:text-accent"
+                        aria-label={`Verify ${cert.name} (opens in new tab)`}
+                      >
+                        Verify <ArrowUpRight className="h-3 w-3" aria-hidden="true" />
+                      </a>
+                    )}
+                  </li>
+                ))}
+              </ul>
+              <Link href="/certifications" className="link mt-4 inline-flex items-center gap-1 text-sm">
+                All certifications <ArrowRight className="h-4 w-4" aria-hidden="true" />
+              </Link>
+            </div>
+          </div>
+        </Reveal>
+      </section>
+
+      {/* What I do + security mindset */}
+      <section id="how-i-work" aria-labelledby="how-heading" className="anchor-target container py-20 sm:py-24">
+        <Reveal>
+          <SectionHeading id="how-heading" eyebrow="What I do" tone="butter" title="Three layers, one engineer." />
+        </Reveal>
+        <RevealGroup className="grid gap-6 md:grid-cols-3">
           {siteConfig.capabilities.map((capability, i) => {
-            const look = CAPABILITY_LOOKS[i % CAPABILITY_LOOKS.length]!
+            const look = CAPABILITY_ICONS[i % CAPABILITY_ICONS.length]!
             const Icon = look.Icon
             return (
               <Reveal key={capability.title}>
-                <div
-                  className={cn(
-                    'pop-card pop-card-hover flex h-full flex-col gap-4 rounded-2xl p-8 transition-transform duration-300 hover:rotate-0',
-                    look.bg,
-                    look.rotate,
-                  )}
-                >
-                  <div className="grid h-11 w-11 place-items-center rounded-xl border-2 border-foreground bg-elevated">
+                <div className="pop-card flex h-full flex-col gap-4 rounded-2xl p-7">
+                  <div className={`grid h-11 w-11 place-items-center rounded-xl border-2 border-foreground ${look.bg}`}>
                     <Icon className="h-5 w-5" aria-hidden="true" />
                   </div>
                   <h3 className="display text-3xl leading-tight">{capability.title}</h3>
@@ -70,7 +196,9 @@ export default async function HomePage() {
                   <ul className="mt-auto space-y-2 pt-2 font-mono text-xs uppercase tracking-wider text-foreground/80">
                     {capability.bullets.map((bullet) => (
                       <li key={bullet} className="flex items-center gap-2">
-                        <span aria-hidden="true" className="text-accent">✦</span>
+                        <span aria-hidden="true" className="text-accent">
+                          ✦
+                        </span>
                         {bullet}
                       </li>
                     ))}
@@ -80,132 +208,122 @@ export default async function HomePage() {
             )
           })}
         </RevealGroup>
-      </section>
 
-      {/* Selected work */}
-      <section className="container py-24 sm:py-28">
         <Reveal>
-          <div className="mb-12 flex items-end justify-between gap-6">
-            <SectionHeading
-              eyebrow="Selected work"
-              tone="mint"
-              title="Things I've shipped"
-              description="Straight from my pinned GitHub repos, as current as my last push."
-              className="mb-0"
-            />
-            <Link
-              href="/projects"
-              className="link hidden shrink-0 items-center gap-1 text-sm sm:inline-flex"
-            >
-              All projects <ArrowRight className="h-4 w-4" aria-hidden="true" />
-            </Link>
+          <div className="mt-8 grid gap-8 rounded-2xl border-2 border-foreground bg-elevated p-7 sm:p-9 lg:grid-cols-[1.1fr_1fr] lg:gap-14">
+            <div>
+              <p className="mb-5" aria-hidden="true">
+                <span className="tag-sticker bg-pop-blush">{siteConfig.security.eyebrow}</span>
+              </p>
+              <h3 className="display text-balance text-3xl sm:text-4xl">{siteConfig.security.title}</h3>
+              <p className="pretty-wrap mt-4 max-w-lg text-[0.95rem] leading-relaxed text-muted-foreground">
+                {siteConfig.security.summary}
+              </p>
+              <Link
+                href={siteConfig.security.link.href}
+                className="link mt-6 inline-flex items-center gap-1 text-sm"
+              >
+                {siteConfig.security.link.label} <ArrowRight className="h-4 w-4" aria-hidden="true" />
+              </Link>
+            </div>
+            <ul className="grid gap-3 self-center" aria-label="Security practice">
+              {siteConfig.security.points.map((point) => (
+                <li key={point} className="flex items-start gap-3 text-sm leading-relaxed text-foreground/85">
+                  <ShieldCheck className="mt-0.5 h-4 w-4 shrink-0 text-accent" aria-hidden="true" />
+                  {point}
+                </li>
+              ))}
+            </ul>
           </div>
         </Reveal>
-        <RevealGroup className="grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
-          {featuredRepos.map((repo, i) => (
-            <Reveal key={repo.name}>
-              <ProjectCard repo={repo} tilt={TILTS[i % TILTS.length]!} />
-            </Reveal>
-          ))}
-        </RevealGroup>
       </section>
 
-      {/* About + bench notes */}
-      <section className="container py-24 sm:py-28">
-        <RevealGroup className="grid items-start gap-16 lg:grid-cols-2 lg:gap-20">
+      {/* About */}
+      <section id="about" aria-labelledby="about-heading" className="anchor-target container py-20 sm:py-24">
+        <RevealGroup className="grid items-start gap-12 lg:grid-cols-2 lg:gap-16">
           <Reveal>
             <div>
-              <SectionHeading eyebrow="About" tone="blush" title="The short version" />
-              <p className="pretty-wrap -mt-4 max-w-lg text-lg leading-relaxed text-muted-foreground">
+              <SectionHeading id="about-heading" eyebrow="About" tone="blush" title="The short version." className="mb-6" />
+              <p className="pretty-wrap max-w-lg text-lg leading-relaxed text-muted-foreground">
                 {siteConfig.longBio}
               </p>
-              <Link href="/contact" className="link mt-8 inline-flex items-center gap-2 text-sm">
-                Come say hi <ArrowRight className="h-4 w-4" aria-hidden="true" />
-              </Link>
+              <div className="mt-8 flex flex-wrap items-center gap-4">
+                <Link href="/contact" className="link inline-flex items-center gap-1 text-sm">
+                  Get in touch <ArrowRight className="h-4 w-4" aria-hidden="true" />
+                </Link>
+                <Link href="/blog" className="link inline-flex items-center gap-1 text-sm">
+                  Read the writing <ArrowRight className="h-4 w-4" aria-hidden="true" />
+                </Link>
+              </div>
             </div>
           </Reveal>
-
           <Reveal>
             <div>
-              <p className="mb-6" aria-hidden="true">
-                <span className="tag-sticker bg-pop-butter">On the bench right now</span>
+              <TerminalBlock lines={[...siteConfig.terminal]} title="aidan@dev-aidan.com" wrap />
+              <p className="mt-4 flex items-center gap-3 font-mono text-xs text-muted-foreground">
+                <PixelAvatar size={36} animate={false} />
+                me, in 16×16 pixels. The rest of the site is the higher-resolution version.
               </p>
-              <ul className="grid gap-5 sm:grid-cols-2">
-                {siteConfig.currentlyBuilding.map((item, i) => {
-                  const look = NOTE_LOOKS[i % NOTE_LOOKS.length]!
-                  return (
-                    <li
-                      key={item.title}
-                      className={cn(
-                        'pop-card pop-card-hover rounded-xl p-5 transition-transform duration-300 hover:rotate-0',
-                        look.bg,
-                        look.rotate,
-                      )}
-                    >
-                      <p className="font-semibold leading-snug">{item.title}</p>
-                      <p className="mt-2 font-mono text-xs leading-relaxed text-foreground/70">
-                        {item.description}
-                      </p>
-                    </li>
-                  )
-                })}
-              </ul>
             </div>
           </Reveal>
         </RevealGroup>
       </section>
 
-      {/* Latest writing */}
-      {latestPosts.length > 0 && (
-        <section className="container py-24 sm:py-28">
+      {/* Writing */}
+      {posts.length > 0 && (
+        <section id="writing" aria-labelledby="writing-heading" className="anchor-target container py-20 sm:py-24">
           <Reveal>
-            <div className="mb-12 flex items-end justify-between gap-6">
-              <SectionHeading
-                eyebrow="Writing"
-                tone="butter"
-                title="Notes from the build"
-                description="Things I learned the hard way, written down while the bruise was fresh."
-                className="mb-0"
-              />
-              <Link
-                href="/blog"
-                className="link hidden shrink-0 items-center gap-1 text-sm sm:inline-flex"
-              >
-                All posts <ArrowRight className="h-4 w-4" aria-hidden="true" />
-              </Link>
-            </div>
+            <SectionHeading
+              id="writing-heading"
+              eyebrow="Writing"
+              tone="butter"
+              title="Notes from the build."
+              description="Architecture calls, delivery habits and the occasional security writeup, written down while the lesson was fresh."
+              action={
+                <Link href="/blog" className="link inline-flex items-center gap-1 text-sm">
+                  All posts <ArrowRight className="h-4 w-4" aria-hidden="true" />
+                </Link>
+              }
+            />
           </Reveal>
           <RevealGroup className="grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
-            {latestPosts.map((post, i) => (
+            {posts.map((post) => (
               <Reveal key={`${post.kind}-${post.slug}`}>
-                <PostCard post={post} tilt={TILTS[(i + 1) % TILTS.length]!} />
+                <PostCard post={post} />
               </Reveal>
             ))}
           </RevealGroup>
         </section>
       )}
 
-      {/* CTA */}
-      <section className="container pb-24 pt-8">
+      {/* Contact CTA */}
+      <section id="contact" aria-labelledby="cta-heading" className="anchor-target container pb-24 pt-6">
         <Reveal>
           <div className="pop-card relative overflow-hidden rounded-3xl bg-pop-sky p-10 text-center sm:p-16">
-            <span
-              aria-hidden="true"
-              className="absolute -top-3 left-1/2 h-7 w-24 -translate-x-1/2 -rotate-2 rounded-sm bg-pop-butter/90 shadow-sm"
-            />
-            <h2 className="display text-balance text-4xl sm:text-6xl">
-              Got something <span className="accent-text">worth building</span>?
+            <h2 id="cta-heading" className="display text-balance text-4xl sm:text-6xl">
+              Got a system <span className="accent-text">worth talking about</span>?
             </h2>
-            <p className="pretty-wrap mx-auto mt-5 max-w-md text-lg leading-relaxed text-foreground/75">
-              No public inbox, but LinkedIn and GitHub are always open.
+            <p className="pretty-wrap mx-auto mt-5 max-w-xl text-lg leading-relaxed text-foreground/75">
+              Questions about a project, a write-up, or how something here was built are always welcome.
+              LinkedIn is the fastest way to reach me; GitHub if you&apos;d rather read the code first.
             </p>
-            <div className="mt-9 flex flex-wrap justify-center gap-4">
+            <div className="mt-9 flex flex-wrap justify-center gap-3">
               <PillLink href={siteConfig.socials.linkedin} variant="solid">
-                LinkedIn <ArrowRight className="h-4 w-4" aria-hidden="true" />
+                <Linkedin className="h-4 w-4" aria-hidden="true" /> LinkedIn
               </PillLink>
-              <PillLink href={`https://github.com/${siteConfig.socials.github}`} variant="glass">
-                GitHub <ArrowRight className="h-4 w-4" aria-hidden="true" />
+              <PillLink href={githubUrl} variant="glass">
+                <Github className="h-4 w-4" aria-hidden="true" /> GitHub
               </PillLink>
+              {cv.url && (
+                <a href={cv.url} download className={pillClassName('glass')}>
+                  <Download className="h-4 w-4" aria-hidden="true" /> {cv.label}
+                </a>
+              )}
+              {email && (
+                <a href={`mailto:${email}`} className={pillClassName('glass')}>
+                  <Mail className="h-4 w-4" aria-hidden="true" /> Email
+                </a>
+              )}
             </div>
           </div>
         </Reveal>

@@ -301,7 +301,7 @@ export default async function HomePage() {
         <Reveal>
           <div className="pop-card relative overflow-hidden rounded-3xl bg-pop-sky p-10 text-center sm:p-16">
             <h2 id="cta-heading" className="display text-balance text-4xl sm:text-6xl">
-              Got a system <span className="accent-text">worth talking about</span>?
+              Wanna <span className="accent-text">talk</span>?
             </h2>
             <p className="pretty-wrap mx-auto mt-5 max-w-xl text-lg leading-relaxed text-foreground/75">
               Questions about a project, a write-up, or how something here was built are always welcome.
